@@ -35,6 +35,7 @@ describe('Auth test', function () {
   describe('POST /api/login', function () {
     it('should succeed and redirect to /dashboard if valid', function () {
       return supertest(app).post('/api/login')
+        .type('form')
         .send({ username: 'user', password: '12345678' })
         .expect('Location', /\/dashboard/)
         .expect(302)
@@ -42,6 +43,7 @@ describe('Auth test', function () {
 
     it('should fail with 401 if invalid', function () {
       return supertest(app).post('/api/login')
+        .type('form')
         .send({ username: 'user', password: '123456' })
         .expect(401)
     })
