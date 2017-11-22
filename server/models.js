@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 mongoose.Promise = require('bluebird')
 const Schema = mongoose.Schema
 
-const env = process.NODE_ENV
+const env = process.env.NODE_ENV
 const suffix = env || 'development'
 const uri = `mongodb://localhost:27017/highgarden-${suffix}`
 mongoose.connect(uri, { useMongoClient: true })

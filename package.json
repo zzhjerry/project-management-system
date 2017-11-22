@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "nodemon server/index.js",
     "test:db": "[ -d .db ] || mkdir .db && mongod --dbpath=.db",
-    "test": "mocha test/**/*.test.js --exit",
-    "test:debug": "mocha debug test/**/*.test.js --exit"
+    "test": "NODE_ENV=test mocha test/**/*.test.js --exit",
+    "test:debug": "NODE_ENV=test mocha debug test/**/*.test.js --exit"
   },
   "keywords": [
     "project-management"
