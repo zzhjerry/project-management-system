@@ -1,9 +1,10 @@
 {
-  "name": "project-management-system",
+  "name": "highgarden",
   "version": "0.0.0",
-  "description": "Project Management System",
+  "description": "A Project Management System",
   "main": "server/index.js",
   "scripts": {
+    "test:db": "mkdir .db && mongod --dbpath=.db",
     "test": "mocha test/**/*.test.js"
   },
   "keywords": [
