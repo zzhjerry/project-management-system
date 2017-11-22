@@ -4,8 +4,10 @@
   "description": "A Project Management System",
   "main": "server/index.js",
   "scripts": {
-    "test:db": "mkdir .db && mongod --dbpath=.db",
-    "test": "mocha test/**/*.test.js --exit"
+    "dev": "nodemon server/index.js",
+    "test:db": "[ -d .db ] || mkdir .db && mongod --dbpath=.db",
+    "test": "mocha test/**/*.test.js --exit",
+    "test:debug": "mocha debug test/**/*.test.js --exit"
   },
   "keywords": [
     "project-management"
@@ -21,6 +23,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "factory-girl": "^5.0.1",
     "mocha": "^4.0.1",
+    "nodemon": "^1.12.1",
     "webpack": "^3.8.1"
   },
   "dependencies": {
