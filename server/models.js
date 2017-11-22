@@ -11,12 +11,35 @@ mongoose.connect(uri)
 const userSchema = new Schema({
   username: {
     type: String,
-    required: true
+    required: true,
+    unique: true
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+    trim: true
   },
   password: {
     type: String,
     required: true
   }
+})
+
+/**
+ * Validate password is correct
+ *
+ * @param {string} password - the password to be validated
+ * @return {boolean}
+ */
+userSchema.methods.validPassword = function (password) {
+  return this.password === password
+}
+
+// Encrypt password before save
+userSchema.pre('save', function (next) {
+  // TODO: bcrypt password
+  next()
 })
 
 const projectSchema = new Schema({

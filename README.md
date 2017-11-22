@@ -15,7 +15,7 @@ Fail (status code: 401): "Invalid username or password"
 
 - GET, PUT, DELETE
 
-Fail (status code: 405)
+Fail (status code: 404)
 
 ## Dev Notes
 
@@ -64,7 +64,6 @@ all requirements.
 
 - implementation of session based authentication
 
-Although it's possible to build a plain "hand written" authentication flow following
-[this artical](https://medium.com/of-all-things-tech-progress/starting-with-authentication-a-tutorial-with-node-js-and-mongodb-25d524ca0359),
-I decided to use [passport](http://www.passportjs.org/docs/) as it's quite reliable and mature for
+Inspired by [this artical](https://medium.com/of-all-things-tech-progress/starting-with-authentication-a-tutorial-with-node-js-and-mongodb-25d524ca0359).
+Also use [passport](http://www.passportjs.org/docs/) as it's quite reliable and mature for
 various authentication needs.
