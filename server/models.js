@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 const env = process.NODE_ENV
 const suffix = env || 'development'
 const uri = `mongodb://localhost:27017/highgarden-${suffix}`
-mongoose.connect(uri)
+mongoose.connect(uri, { useMongoClient: true })
 
 /* Schema definition */
 const userSchema = new Schema({
