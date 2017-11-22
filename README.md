@@ -1,6 +1,37 @@
 # Project Management System
 
+## Architecture
+
+### Backend (`/server`)
+
+API endpoints are grouped under `/api` url with following routes:
+
+> `/api/login` (POST)
+
+- POST
+
+Success (status code: 302): redirect user to `/dashboard`. Assign a session that expires in 2 weeks.
+Fail (status code: 401): "Invalid username or password"
+
+- GET, PUT, DELETE
+
+Fail (status code: 405)
+
 ## Dev Notes
+
+### Prerequisites
+
+Assume you have following softwares installed, if not, see link behind for instruction
+
+- MongoDB ([install](https://docs.mongodb.com/manual/administration/install-community/))
+
+### Choice of libraries
+
+- Util: [lodash](https://lodash.com/docs/4.17.4)
+- Promise: [bluebird](http://bluebirdjs.com/docs/getting-started.html)
+- Linting: [eslint](https://eslint.org/) and [standard](https://github.com/standard/standard)
+- Test framework: [mocha](https://mochajs.org/))
+- API Integration test: [supertest](https://github.com/visionmedia/supertest)
 
 ### Data Models
 
