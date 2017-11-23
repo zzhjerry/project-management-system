@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+mongoose.connect('mongodb://localhost:27017/highgarden-test', { useMongoClient: true })
 const supertest = require('supertest')
 
 const factory = require('./factory.js')
@@ -9,7 +11,7 @@ describe('Login test', function () {
   })
 
   afterEach(function () {
-    return factory.cleanUp()
+    return mongoose.connection.db.dropCollection('users')
   })
 
   describe('GET /api/login', function () {
@@ -80,18 +82,19 @@ describe('Sign up test', function () {
     beforeEach(function () {
       return factory.build('user').then(function (record) {
         user = record._doc
+        return mongoose.connection.db.createCollection('users')
       })
     })
 
     afterEach(function () {
-      return factory.cleanUp()
+      return mongoose.connection.db.dropCollection('users')
     })
 
-    it('should respond 400 with validation error on invalid password', function () {
-      user.password = '12345@$@'
+    it('should redirect to /dashboard on success', function () {
       return supertest(app).post('/api/signup')
         .send(user)
-        .expect(400, { message: 'password should only contain letters and numbers' })
+        .expect(302)
+        .expect('Location', /\/dashboard/)
     })
 
     it('should respond 400 with validation error on short password', function () {
@@ -101,20 +104,23 @@ describe('Sign up test', function () {
         .expect(400, { message: 'password should be at least 8 characters long' })
     })
 
+    it('should respond 400 with validation error on invalid password', function () {
+      user.password = '12345@$@'
+      return supertest(app).post('/api/signup')
+        .send(user)
+        .expect(400, { message: 'password should only contain letters and numbers' })
+    })
+
     it('should respond 400 with error message on creating duplicate user', function () {
-      return factory.create('user')
-        .then(function () {
+      return factory.create('user').then(function () {
+        // When the first model is saved, index may not exist. So we need to wait
+        // for index to be created to test creating duplicate model
+        return mongoose.model('User').ensureIndexes().then(function () {
           return supertest(app).post('/api/signup')
             .send(user)
             .expect(400, { message: 'username already existed' })
         })
-    })
-
-    it('should redirect to /dashboard on success', function () {
-      return supertest(app).post('/api/signup')
-        .send(user)
-        .expect(302)
-        .expect('Location', /\/dashboard/)
+      })
     })
   })
 })
