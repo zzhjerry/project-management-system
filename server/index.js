@@ -78,9 +78,13 @@ app.post('/api/signup', function (req, res, next) {
   return user.save().then(function () {
     return res.redirect('/dashboard')
   }).catch(function (err) {
-    // error when creating duplicate accounts
-    res.status(400)
-    return res.json(err)
+    if (err.code === 11000) {
+      // error when creating duplicate accounts
+      res.status(400)
+      return res.json({ message: 'username already existed' })
+    }
+    // pass other errors to error handler
+    throw err
   })
 })
 

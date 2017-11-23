@@ -12,7 +12,8 @@ const userSchema = new Schema({
   username: {
     type: String,
     required: 'username is required',
-    unique: true
+    unique: true,
+    trim: true
   },
   email: {
     type: String,
@@ -23,12 +24,7 @@ const userSchema = new Schema({
     type: String,
     required: 'password is required',
     minlength: [8, 'password should be at least 8 characters long'],
-    validate: {
-      validator: function (value) {
-        return /[A-Za-z0-9]+/.test(value)
-      },
-      message: 'password should only contain letters and numbers'
-    }
+    match: [/^[A-Za-z0-9]+$/, 'password should only contain letters and numbers']
   }
 })
 
@@ -52,11 +48,13 @@ const projectSchema = new Schema({
   status: {
     type: String,
     enum: ['new', 'pending', 'expired'],
-    required: true
+    required: true,
+    trim: true
   },
   title: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
   experts: [Schema.Types.ObjectId]
 })
