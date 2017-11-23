@@ -9,15 +9,11 @@ mongoose.connect(uri, { useMongoClient: true })
 
 /* Schema definition */
 const userSchema = new Schema({
-  username: {
-    type: String,
-    required: 'username is required',
-    unique: true,
-    trim: true
-  },
   email: {
     type: String,
     required: 'email is required',
+    unique: true,
+    match: [/^.*@.*\..*$/, 'email address is not valid'], // email should have @ and .
     trim: true
   },
   password: {

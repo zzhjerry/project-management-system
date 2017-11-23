@@ -23,6 +23,7 @@
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
     "factory-girl": "^5.0.1",
+    "it-each": "^0.3.1",
     "mocha": "^4.0.1",
     "nodemon": "^1.12.1",
     "webpack": "^3.8.1"

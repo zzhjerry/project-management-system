@@ -38,8 +38,8 @@ Assume you have following softwares installed, if not, see link behind for instr
 
 > User
 
-- **username (string, required)**: minimum 8 chars
-- **password (string, required)**: encrypted with `bcrypt`
+- **email (string, required)**: account to login
+- **password (string, required)**: minimum 8 chars, encrypted with `bcrypt`
 
 > Project
 

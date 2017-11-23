@@ -1,13 +1,14 @@
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/highgarden-test', { useMongoClient: true })
 const supertest = require('supertest')
+require('it-each')({ testPerIteration: true })
 
 const factory = require('./factory.js')
 const app = require('../../../server/index.js')
 
 describe('Login test', function () {
   beforeEach(function () {
-    return factory.create('user', { username: 'user', password: '12345678' })
+    return factory.create('user')
   })
 
   afterEach(function () {
@@ -23,7 +24,7 @@ describe('Login test', function () {
   describe('PUT /api/login', function () {
     it('should respond 404', function () {
       return supertest(app).put('/api/login')
-        .send({ username: 'u', password: 'p' })
+        .send({ email: 'u', password: 'p' })
         .expect(404)
     })
   })
@@ -35,23 +36,30 @@ describe('Login test', function () {
   })
 
   describe('POST /api/login', function () {
+    var user
+    beforeEach(function () {
+      user = { email: 'user@gmail.com', password: '12345678' }
+    })
+
     it('should succeed and redirect to /dashboard if valid', function () {
       return supertest(app).post('/api/login')
-        .send({ username: 'user', password: '12345678' })
+        .send(user)
         .expect('Location', /\/dashboard/)
         .expect(302)
     })
 
     it('should respond 401 and send invalid password message', function () {
+      user.password = '123455'
       return supertest(app).post('/api/login')
-        .send({ username: 'user', password: '123456' })
+        .send(user)
         .expect(401, { message: 'Incorrect password.' })
     })
 
-    it('should respond 401 and send invalid username message', function () {
+    it('should respond 401 and send invalid email account message', function () {
+      user.email = 'no-one@gmail.com'
       return supertest(app).post('/api/login')
-        .send({ username: 'noone', password: '123456' })
-        .expect(401, { message: 'Incorrect username.' })
+        .send(user)
+        .expect(401, { message: 'Incorrect email account.' })
     })
   })
 })
@@ -66,7 +74,7 @@ describe('Sign up test', function () {
   describe('PUT /api/signup', function () {
     it('should respond 404', function () {
       return supertest(app).put('/api/signup')
-        .send({ username: 'u', password: 'p' })
+        .send({ email: 'u@g.com', password: 'p' })
         .expect(404)
     })
   })
@@ -118,9 +126,18 @@ describe('Sign up test', function () {
         return mongoose.model('User').ensureIndexes().then(function () {
           return supertest(app).post('/api/signup')
             .send(user)
-            .expect(400, { message: 'username already existed' })
+            .expect(400, { message: 'email account already existed' })
         })
       })
+    })
+
+    const invalidEmails = ['user@gmail', 'user.com', 'user']
+    let message = 'should respond 400 with error message on invalid email - %s'
+    it.each(invalidEmails, message, ['element'], function (email) {
+      user.email = email
+      return supertest(app).post('/api/signup')
+        .send(user)
+        .expect(400, { message: 'email address is not valid' })
     })
   })
 })

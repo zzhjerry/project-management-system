@@ -8,11 +8,13 @@ const LocalStrategy = require('passport-local').Strategy
 const models = require('./models.js')
 const User = models.User
 
-passport.use(new LocalStrategy(function (username, password, done) {
-  User.findOne({ username: username }, function (err, user) {
+passport.use(new LocalStrategy({
+  usernameField: 'email'
+}, function (email, password, done) {
+  User.findOne({ email: email }, function (err, user) {
     if (err) { return done(err) }
     if (!user) {
-      return done(null, false, { message: 'Incorrect username.' })
+      return done(null, false, { message: 'Incorrect email account.' })
     }
     if (!user.validPassword(password)) {
       return done(null, false, { message: 'Incorrect password.' })
@@ -66,7 +68,7 @@ app.post('/api/login', function (req, res, next) {
 })
 
 app.post('/api/signup', function (req, res, next) {
-  const credentials = _.pick(req.body, ['username', 'password', 'email'])
+  const credentials = _.pick(req.body, ['email', 'password'])
   const user = new User(credentials)
   const error = user.validateSync()
   const invalidPasswordError = _.get(error, 'errors.password')
@@ -81,7 +83,7 @@ app.post('/api/signup', function (req, res, next) {
     if (err.code === 11000) {
       // error when creating duplicate accounts
       res.status(400)
-      return res.json({ message: 'username already existed' })
+      return res.json({ message: 'email account already existed' })
     }
     // pass other errors to error handler
     throw err

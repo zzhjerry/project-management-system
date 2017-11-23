@@ -5,7 +5,6 @@ const adapter = new FactoryGirl.MongooseAdapter()
 factory.setAdapter(adapter)
 
 factory.define('user', models.User, {
-  username: 'user',
   email: 'user@gmail.com',
   password: '12345678'
 })
