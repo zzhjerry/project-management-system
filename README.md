@@ -4,6 +4,9 @@
 
 ### Backend (`/server`)
 
+No plan to support data submitted through form for now.
+Frontend `post` request should use `Content-Type: application/json`
+
 API endpoints are grouped under `/api` url with following routes:
 
 > `/api/login` (POST)

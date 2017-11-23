@@ -1,5 +1,8 @@
 const express = require('express')
 const passport = require('passport')
+const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser')
+
 const LocalStrategy = require('passport-local').Strategy
 const models = require('./models.js')
 const User = models.User
@@ -36,8 +39,8 @@ passport.deserializeUser(function (id, cb) {
 })
 
 var app = express()
-app.use(require('cookie-parser')())
-app.use(require('body-parser').urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(bodyParser.json())
 app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }))
 
 // Initialize Passport and restore authentication state, if any, from the
