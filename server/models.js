@@ -11,18 +11,24 @@ mongoose.connect(uri, { useMongoClient: true })
 const userSchema = new Schema({
   username: {
     type: String,
-    required: true,
+    required: 'username is required',
     unique: true
   },
   email: {
     type: String,
-    unique: true,
-    required: true,
+    required: 'email is required',
     trim: true
   },
   password: {
     type: String,
-    required: true
+    required: 'password is required',
+    minlength: [8, 'password should be at least 8 characters long'],
+    validate: {
+      validator: function (value) {
+        return /[A-Za-z0-9]+/.test(value)
+      },
+      message: 'password should only contain letters and numbers'
+    }
   }
 })
 

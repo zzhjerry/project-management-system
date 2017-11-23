@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const express = require('express')
 const passport = require('passport')
 const cookieParser = require('cookie-parser')
@@ -62,6 +63,25 @@ app.post('/api/login', function (req, res, next) {
       return res.redirect('/dashboard')
     })
   })(req, res, next)
+})
+
+app.post('/api/signup', function (req, res, next) {
+  const credentials = _.pick(req.body, ['username', 'password', 'email'])
+  const user = new User(credentials)
+  const error = user.validateSync()
+  const invalidPasswordError = _.get(error, 'errors.password')
+  if (invalidPasswordError) {
+    // error when password is invalid
+    res.status(400)
+    return res.json({ message: invalidPasswordError.message })
+  }
+  return user.save().then(function () {
+    return res.redirect('/dashboard')
+  }).catch(function (err) {
+    // error when creating duplicate accounts
+    res.status(400)
+    return res.json(err)
+  })
 })
 
 /**

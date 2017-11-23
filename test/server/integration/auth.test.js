@@ -76,30 +76,43 @@ describe('Sign up test', function () {
   })
 
   describe('POST /api/signup', function () {
-    it('should respond 400 with validation error on short password', function () {
-      return supertest(app).post('/api/signup')
-        .send({ username: 'user', password: 'short' })
-        .expect(400, { message: 'password should be at least 8 characters long' })
+    var user
+    beforeEach(function () {
+      return factory.build('user').then(function (record) {
+        user = record._doc
+      })
+    })
+
+    afterEach(function () {
+      return factory.cleanUp()
     })
 
     it('should respond 400 with validation error on invalid password', function () {
+      user.password = '12345@$@'
       return supertest(app).post('/api/signup')
-        .send({ username: 'user', password: '12345@$@' })
+        .send(user)
         .expect(400, { message: 'password should only contain letters and numbers' })
     })
 
+    it('should respond 400 with validation error on short password', function () {
+      user.password = 'short'
+      return supertest(app).post('/api/signup')
+        .send(user)
+        .expect(400, { message: 'password should be at least 8 characters long' })
+    })
+
     it('should respond 400 with error message on creating duplicate user', function () {
-      return factory.create('user', { username: 'user', password: '12345678' })
+      return factory.create('user')
         .then(function () {
           return supertest(app).post('/api/signup')
-            .send({ username: 'user', password: '12345678' })
+            .send(user)
             .expect(400, { message: 'username already existed' })
         })
     })
 
     it('should redirect to /dashboard on success', function () {
       return supertest(app).post('/api/signup')
-        .send({ username: 'user', password: '12345678' })
+        .send(user)
         .expect(302)
         .expect('Location', /\/dashboard/)
     })
