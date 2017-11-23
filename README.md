@@ -9,16 +9,13 @@ Frontend `post` request should use `Content-Type: application/json`
 
 API endpoints are grouped under `/api` url with following routes:
 
-> `/api/login` (POST)
-
-- POST
+**`/api/login` (POST)**
 
 Success (status code: 302): redirect user to `/dashboard`. Assign a session that expires in 2 weeks.
-Fail (status code: 401): "Invalid username or password"
 
-- GET, PUT, DELETE
+**`/api/signup` (POST)**
 
-Fail (status code: 404)
+Success (status code: 302): redirect user to `/dashboard`. Create user in DB
 
 ## Dev Notes
 
