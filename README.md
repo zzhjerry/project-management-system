@@ -35,6 +35,7 @@ Assume you have following softwares installed, if not, see link behind for instr
 - Linting: [eslint](https://eslint.org/) and [standard](https://github.com/standard/standard)
 - Test framework: [mocha](https://mochajs.org/))
 - API Integration test: [supertest](https://github.com/visionmedia/supertest)
+- Assertion Library: [chai/assert](http://chaijs.com/api/assert/)
 
 ### Data Models
 
