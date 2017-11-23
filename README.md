@@ -23,7 +23,7 @@ Success (status code: 302): redirect user to `/dashboard`. Create user in DB
 
 Assume you have following softwares installed, if not, see link behind for instruction
 
-- MongoDB ([install](https://docs.mongodb.com/manual/administration/install-community/))
+- MongoDB ([install](https://docs.mongodb.com/manual/administration/install-community/)): `mongod` is needed to start `development` and `testing` database
 
 ### Choice of libraries
 
