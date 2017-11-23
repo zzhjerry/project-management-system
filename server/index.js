@@ -16,10 +16,13 @@ passport.use(new LocalStrategy({
     if (!user) {
       return done(null, false, { message: 'Incorrect email account.' })
     }
-    if (!user.validPassword(password)) {
-      return done(null, false, { message: 'Incorrect password.' })
-    }
-    return done(null, user)
+    return user.validPassword(password).then(function (res) {
+      if (res) {
+        return done(null, user)
+      } else {
+        return done(null, false, { message: 'Incorrect password.' })
+      }
+    })
   })
 }))
 

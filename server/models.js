@@ -1,6 +1,8 @@
+const _ = require('lodash')
 const mongoose = require('mongoose')
 mongoose.Promise = require('bluebird')
 const Schema = mongoose.Schema
+const bcrypt = require('bcrypt')
 
 const env = process.env.NODE_ENV
 const suffix = env || 'development'
@@ -31,13 +33,17 @@ const userSchema = new Schema({
  * @return {boolean}
  */
 userSchema.methods.validPassword = function (password) {
-  return this.password === password
+  const user = this
+  return bcrypt.compare(password, user.password).then(_.identity)
 }
 
 // Encrypt password before save
 userSchema.pre('save', function (next) {
-  // TODO: bcrypt password
-  next()
+  const user = this
+  return bcrypt.hash(user.password, 10).then(function (hash) {
+    user.password = hash
+    next()
+  }).catch(next)
 })
 
 const projectSchema = new Schema({

@@ -147,8 +147,10 @@ describe('Sign up test', function () {
     it('should be encoded when saving to database', function () {
       return factory.create('user', { password: '12345678' })
         .then(function (record) {
+          assert.notEqual(record.password, '12345678')
           return bcrypt.compare('12345678', record.password).then(function (res) {
             assert.isTrue(res)
+            return mongoose.connection.db.dropCollection('users')
           })
         })
     })
