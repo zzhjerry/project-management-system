@@ -48,9 +48,20 @@ app.use(require('express-session')({ secret: 'keyboard cat', resave: false, save
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.post('/api/login', passport.authenticate('local'), function (req, res, err) {
-  res.status(302)
-  res.redirect('/dashboard')
+app.post('/api/login', function (req, res, next) {
+  passport.authenticate('local', function (err, user, info) {
+    if (err) { return next(err) }
+    if (!user) {
+      // *** Display message without using flash option
+      // re-render the login form with a message
+      res.status(401)
+      return res.json(info)
+    }
+    req.logIn(user, function (err) {
+      if (err) { return next(err) }
+      return res.redirect('/dashboard')
+    })
+  })(req, res, next)
 })
 
 /**

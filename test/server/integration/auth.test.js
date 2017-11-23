@@ -1,4 +1,5 @@
 const supertest = require('supertest')
+const assert = require('chai').assert
 
 const factory = require('./factory.js')
 const app = require('../../../server/index.js')
@@ -40,10 +41,22 @@ describe('Auth test', function () {
         .expect(302)
     })
 
-    it('should fail with 401 if invalid', function () {
+    it('should fail with 401 and send invalid password message', function () {
       return supertest(app).post('/api/login')
         .send({ username: 'user', password: '123456' })
         .expect(401)
+        .expect(function (res) {
+          assert.deepEqual(res.body, { message: 'Incorrect password.' })
+        })
+    })
+
+    it('should fail with 401 and send invalid username message', function () {
+      return supertest(app).post('/api/login')
+        .send({ username: 'noone', password: '123456' })
+        .expect(401)
+        .expect(function (res) {
+          assert.deepEqual(res.body, { message: 'Incorrect username.' })
+        })
     })
   })
 })
