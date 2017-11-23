@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/highgarden-test', { useMongoClient: true })
 const supertest = require('supertest')
 require('it-each')({ testPerIteration: true })
+const bcrypt = require('bcrypt')
+const assert = require('chai').assert
 
 const factory = require('./factory.js')
 const app = require('../../../server/index.js')
@@ -138,6 +140,17 @@ describe('Sign up test', function () {
       return supertest(app).post('/api/signup')
         .send(user)
         .expect(400, { message: 'email address is not valid' })
+    })
+  })
+
+  describe('Password encoding', function () {
+    it('should be encoded when saving to database', function () {
+      return factory.create('user', { password: '12345678' })
+        .then(function (record) {
+          return bcrypt.compare('12345678', record.password).then(function (res) {
+            assert.isTrue(res)
+          })
+        })
     })
   })
 })
