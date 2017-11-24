@@ -58,7 +58,16 @@ const projectSchema = new Schema({
     required: true,
     trim: true
   },
-  experts: [Schema.Types.ObjectId]
+  experts: [{
+    expert: {
+      type: Schema.Types.ObjectId,
+      ref: 'Expert'
+    },
+    status: {
+      type: String,
+      enum: ['approved', 'rejected']
+    }
+  }]
 })
 
 const expertSchema = new Schema({

@@ -12,6 +12,7 @@ app.use(passport.session())
 
 app.use('/api/auth', require('./auth.js'))
 app.use('/api/users', require('./users.js'))
+app.use('/api/projects', require('./projects.js'))
 
 /**
  * Catch-all error handler middleware

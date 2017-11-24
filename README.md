@@ -49,7 +49,19 @@ Assume you have following softwares installed, if not, see link behind for instr
 
 - **status (string, required, default:new)**: new, pending, expired
 - **title (string, required)**: project title
-- **experts (array, optional)**: a list of choosen experts for the choosen project
+- **experts (array, optional)**: an array of choosen experts for the choosen project with status in following schema
+
+``` javascript
+{
+  expert: ObjectId,
+  status: ["approved", "rejected"]
+}
+```
+
+#### embeded vs reference:
+
+I use reference to store `expert` in `experts` because it saves more space as the growth of number of projects,
+number of experts per project and expert profile length.
 
 > Expert
 

@@ -11,8 +11,7 @@ factory.define('user', models.User, {
 
 factory.define('project', models.Project, {
   status: 'new',
-  title: 'project title',
-  experts: []
+  title: 'project title'
 })
 
 factory.define('expert', models.Expert, {
