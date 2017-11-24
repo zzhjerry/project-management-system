@@ -17,34 +17,34 @@ describe('Login test', function () {
     return mongoose.connection.db.dropCollection('users')
   })
 
-  describe('GET /api/login', function () {
+  describe('GET /api/auth/login', function () {
     it('should respond 404', function () {
-      return supertest(app).get('/api/login').expect(404)
+      return supertest(app).get('/api/auth/login').expect(404)
     })
   })
 
-  describe('PUT /api/login', function () {
+  describe('PUT /api/auth/login', function () {
     it('should respond 404', function () {
-      return supertest(app).put('/api/login')
+      return supertest(app).put('/api/auth/login')
         .send({ email: 'u', password: 'p' })
         .expect(404)
     })
   })
 
-  describe('DELETE /api/login', function () {
+  describe('DELETE /api/auth/login', function () {
     it('should respond 404', function () {
-      return supertest(app).delete('/api/login').expect(404)
+      return supertest(app).delete('/api/auth/login').expect(404)
     })
   })
 
-  describe('POST /api/login', function () {
+  describe('POST /api/auth/login', function () {
     var user
     beforeEach(function () {
       user = { email: 'user@gmail.com', password: '12345678' }
     })
 
     it('should succeed and redirect to /dashboard if valid', function () {
-      return supertest(app).post('/api/login')
+      return supertest(app).post('/api/auth/login')
         .send(user)
         .expect('Location', /\/dashboard/)
         .expect(302)
@@ -52,14 +52,14 @@ describe('Login test', function () {
 
     it('should respond 401 and send invalid password message', function () {
       user.password = '123455'
-      return supertest(app).post('/api/login')
+      return supertest(app).post('/api/auth/login')
         .send(user)
         .expect(401, { message: 'Incorrect password.' })
     })
 
     it('should respond 401 and send invalid email account message', function () {
       user.email = 'no-one@gmail.com'
-      return supertest(app).post('/api/login')
+      return supertest(app).post('/api/auth/login')
         .send(user)
         .expect(401, { message: 'Incorrect email account.' })
     })
