@@ -62,3 +62,13 @@ describe('Auth / login', function () {
     })
   })
 })
+
+describe('Auth / logout', function () {
+  describe('GET /api/auth/logout', function () {
+    it('should redirect to / on success', function () {
+      return supertest(app).get('/api/auth/logout')
+        .expect(302)
+        .expect('Location', '/')
+    })
+  })
+})

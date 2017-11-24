@@ -48,11 +48,18 @@ router.post('/login', function (req, res, next) {
       res.status(401)
       return res.json(info)
     }
-    req.logIn(user, function (err) {
+    // login() method is added by passport
+    req.login(user, function (err) {
       if (err) { return next(err) }
       return res.redirect('/dashboard')
     })
   })(req, res, next)
+})
+
+router.get('/logout', function (req, res, next) {
+  // logout() method is added by passport
+  req.logout()
+  return res.redirect('/')
 })
 
 module.exports = router
