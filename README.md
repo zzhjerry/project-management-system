@@ -28,6 +28,8 @@ get a list of projects with an array of assigned experts with corresponding stat
 
 create a project
 
+**All other routes and request methods not listed above will return 404**
+
 ## Dev Notes
 
 ### Prerequisites
