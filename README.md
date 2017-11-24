@@ -4,19 +4,23 @@
 
 ### Backend (`/server`)
 
-No plan to support data submitted through form for now.
-Frontend `post` request should use `Content-Type: application/json`
+All `post` request should use `json` as format (i.e. Send `Content-Type: application/json` in the header)
 
 API endpoints are grouped under `/api` url with following routes:
 
-**`/api/login` (POST)**
+**`/api/auth/login` (POST)**
 
 Success (status code: 302): redirect user to `/dashboard`. Assign a session that expires in 2 weeks.
 
-**`/api/signup` (POST)**
+**`/api/auth/logout` (GET)**
+
+Success (status code: 302): redirect user to `/`. Clear `req.user`, doesn't clear session.
+
+**`/api/users` (POST)**
 
 Success (status code: 302): redirect user to `/dashboard`. Create user in DB
 
+**
 ## Dev Notes
 
 ### Prerequisites
