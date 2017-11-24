@@ -4,6 +4,7 @@ mongoose.connect('mongodb://localhost:27017/highgarden-test', { useMongoClient: 
 const supertest = require('supertest')
 require('it-each')({ testPerIteration: true })
 const assert = require('chai').assert
+const slugify = require('slug')
 
 const factory = require('./factory.js')
 const app = require('../../../server/index.js')
@@ -54,6 +55,42 @@ describe('Projects', function () {
             assert.deepEqual(res.body[0].experts, [])
           })
       })
+    })
+  })
+
+  describe('POST /api/projects', function () {
+    let body
+    beforeEach(function () {
+      body = { title: 'meow', status: 'new' }
+    })
+
+    it('should respond 400 with validation error on duplicate title', function () {
+      return factory.create('project', { title: 'meow' }).then(function () {
+        return supertest(app).post('/api/projects')
+          .send(body)
+          .expect(400, { message: 'Title already exists' })
+      })
+    })
+
+    it('should success with 201 and return created object', function () {
+      return supertest(app).post('/api/projects')
+        .send(body)
+        .expect(201)
+        .expect(function (res) {
+          assert.isObject(res.body)
+          assert.equal(res.body.title, 'meow')
+          assert.equal(res.body.status, 'new')
+        })
+    })
+
+    it('should create slug from title', function () {
+      return supertest(app).post('/api/projects')
+        .send(body)
+        .expect(201)
+        .expect(function (res) {
+          assert.isObject(res.body)
+          assert.match(res.body.slug, new RegExp(slugify(res.body.title)))
+        })
     })
   })
 })
