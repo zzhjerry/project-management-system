@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 mongoose.Promise = require('bluebird')
 const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
+const slugify = require('slug')
 
 const env = process.env.NODE_ENV
 const suffix = env || 'development'
@@ -55,7 +56,14 @@ const projectSchema = new Schema({
   },
   title: {
     type: String,
+    required: 'Title is required',
+    unique: 'Title aleady exists',
+    trim: true
+  },
+  slug: {
+    type: String,
     required: true,
+    unique: true,
     trim: true
   },
   experts: [{
@@ -68,6 +76,21 @@ const projectSchema = new Schema({
       enum: ['approved', 'rejected']
     }
   }]
+})
+
+projectSchema.pre('validate', function (next) {
+  if (this.isModified('slug')) {
+    // create validation error if slug is modified
+    this.invalidate('slug', 'slug cannot be changed')
+  }
+  next()
+})
+
+projectSchema.pre('save', function (next) {
+  // make sure slug doesn't change on saving if it exists.
+  // if it doesn't exist, create one with slugified title + epoch timestamp
+  this.slug = this.slug || slugify(this.title) + new Date().getTime()
+  next()
 })
 
 const expertSchema = new Schema({
