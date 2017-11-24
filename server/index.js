@@ -1,7 +1,4 @@
-const _ = require('lodash')
 const express = require('express')
-const User = require('./models.js').User
-
 var app = express()
 app.use(require('cookie-parser')())
 app.use(require('body-parser').json())
@@ -13,30 +10,8 @@ const passport = require('passport')
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use('/api/auth', require('./auth'))
-
-app.post('/api/signup', function (req, res, next) {
-  const credentials = _.pick(req.body, ['email', 'password'])
-  const user = new User(credentials)
-  const error = user.validateSync()
-  const invalidPasswordError = _.get(error, 'errors.password')
-  if (invalidPasswordError) {
-    // error when password is invalid
-    res.status(400)
-    return res.json({ message: invalidPasswordError.message })
-  }
-  return user.save().then(function () {
-    return res.redirect('/dashboard')
-  }).catch(function (err) {
-    if (err.code === 11000) {
-      // error when creating duplicate accounts
-      res.status(400)
-      return res.json({ message: 'email account already existed' })
-    }
-    // pass other errors to error handler
-    throw err
-  })
-})
+app.use('/api/auth', require('./auth.js'))
+app.use('/api/users', require('./users.js'))
 
 /**
  * Catch-all error handler middleware
