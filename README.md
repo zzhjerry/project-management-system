@@ -49,6 +49,12 @@ Assume you have following softwares installed, if not, see link behind for instr
 
 - **status (string, required, default:new)**: new, pending, expired
 - **title (string, required)**: project title
+- **slug (string, required)**: slugified version of project title + epoch timestamp
+
+`slug` is used to prettify url of a project's detail view. It will be used to query project document.
+It is unique and cannot be changed once the document is created. A validation error will occur if someone tries to
+`POST` a different slug to `/api/projects/:slug` endpoint.
+
 - **experts (array, optional)**: an array of choosen experts for the choosen project with status in following schema
 
 ``` javascript
