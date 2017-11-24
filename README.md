@@ -72,3 +72,8 @@ all requirements.
 Inspired by [this artical](https://medium.com/of-all-things-tech-progress/starting-with-authentication-a-tutorial-with-node-js-and-mongodb-25d524ca0359).
 Also use [passport](http://www.passportjs.org/docs/) as it's quite reliable and mature for
 various authentication needs.
+
+## Change log
+
+#### v0.1.0 - 20171124 (@jerry)
+* ADD: auth logic and 18 test
