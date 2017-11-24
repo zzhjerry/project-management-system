@@ -66,17 +66,15 @@ It is unique and cannot be changed once the document is created. A validation er
 
 - **experts (array, optional)**: an array of choosen experts for the choosen project with status in following schema
 
+I use reference to store `expert` in `experts` because it saves more space as the growth of number of projects,
+number of experts per project and expert profile length.
+
 ``` javascript
 {
   expert: ObjectId,
   status: ["approved", "rejected"]
 }
 ```
-
-#### embeded vs reference:
-
-I use reference to store `expert` in `experts` because it saves more space as the growth of number of projects,
-number of experts per project and expert profile length.
 
 > Expert
 
@@ -85,20 +83,20 @@ number of experts per project and expert profile length.
 
 ### Authentication
 
-- session based authentication (instead of token based authentication)
+**session based authentication (instead of token based authentication)**
 
 Token based authentication (JWT) is the new trend and has various advantages introduced
-[here](https://auth0.com/blog/cookies-vs-tokens-definitive-guide/). But consider
-that this is a project management system that is intended to be used by internal
-staffs instead of millions of users outside, and both frontend and backend will
+[here](https://auth0.com/blog/cookies-vs-tokens-definitive-guide/). But considering
+that this system is intended to be used by internal staffs instead of millions of
+users outside and both frontend and backend will
 be served on the same domain, session based authentication is enough to handle
-all requirements.
+necessary requirements.
 
-- implementation of session based authentication
+**implementation of session based authentication**
 
 Inspired by [this artical](https://medium.com/of-all-things-tech-progress/starting-with-authentication-a-tutorial-with-node-js-and-mongodb-25d524ca0359).
-Also use [passport](http://www.passportjs.org/docs/) as it's quite reliable and mature for
-various authentication needs.
+Also use [passport](http://www.passportjs.org/docs/) as it's reliable and can be configured for
+various other authentication needs.
 
 ## Change log
 
