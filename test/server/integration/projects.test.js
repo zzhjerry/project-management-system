@@ -64,6 +64,11 @@ describe('Projects', function () {
       body = { title: 'meow', status: 'new' }
     })
 
+    afterEach(function () {
+      assert.match(mongoose.connection.db.s.databaseName, /test/, 'DANGER: not using testing database')
+      return mongoose.connection.db.dropDatabase()
+    })
+
     it('should respond 400 with validation error on duplicate title', function () {
       return factory.create('project', { title: 'meow' }).then(function () {
         return supertest(app).post('/api/projects')
