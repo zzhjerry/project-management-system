@@ -1,6 +1,6 @@
 {
   "name": "highgarden",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Project Management System",
   "main": "server/index.js",
   "scripts": {

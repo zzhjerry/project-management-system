@@ -106,5 +106,7 @@ various other authentication needs.
 
 ## Change log
 
+#### v0.2.0 - 20171126 (@jerry)
+* ADD: /api/projects endpoints and 30 tests
 #### v0.1.0 - 20171124 (@jerry)
 * ADD: auth logic and 18 test
