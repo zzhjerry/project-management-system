@@ -157,8 +157,34 @@ describe('Projects', function () {
           assert.equal(res.body.description, 'more test')
         })
     })
-    it('should approve expert')
-    it('should reject expert')
+    it('should approve expert', function () {
+      return createOneProjectWithThreeExperts$Q().then(function (record) {
+        const doc = record._doc
+        assert.equal(doc.experts[2].status, 'rejected')
+        doc.experts[2].status = 'approved'
+        return supertest(app).put(endpoint).send(doc)
+          .expect(200)
+          .expect(function (res) {
+            assert.isObject(res.body)
+            assert.equal(res.body.experts[2], 'approved')
+          })
+      })
+    })
+
+    it('should reject expert', function () {
+      return createOneProjectWithThreeExperts$Q().then(function (record) {
+        const doc = record._doc
+        assert.equal(doc.experts[1].status, 'approved')
+        doc.experts[1].status = 'rejected'
+        return supertest(app).put(endpoint).send(doc)
+          .expect(200)
+          .expect(function (res) {
+            assert.isObject(res.body)
+            assert.equal(res.body.experts[1], 'rejected')
+          })
+      })
+    })
+
     it('should not modify existing slug', function () {
       body.description = 'more text'
       return supertest(app).put(endpoint)
