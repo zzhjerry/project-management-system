@@ -141,6 +141,7 @@ describe('Projects', function () {
     it('should change title', function () {
       body.title = 'moo'
       return supertest(app).put(endpoint)
+        .send(body)
         .expect(200)
         .expect(function (res) {
           assert.isObject(res.body)
@@ -149,14 +150,17 @@ describe('Projects', function () {
     })
 
     it('should change description', function () {
+      assert.notEqual(body.description, 'more text')
       body.description = 'more text'
       return supertest(app).put(endpoint)
+        .send(body)
         .expect(200)
         .expect(function (res) {
           assert.isObject(res.body)
-          assert.equal(res.body.description, 'more test')
+          assert.equal(res.body.description, 'more text')
         })
     })
+
     it('should approve expert', function () {
       return createOneProjectWithThreeExperts$Q().then(function (record) {
         const doc = record._doc
@@ -166,7 +170,7 @@ describe('Projects', function () {
           .expect(200)
           .expect(function (res) {
             assert.isObject(res.body)
-            assert.equal(res.body.experts[2], 'approved')
+            assert.equal(res.body.experts[2].status, 'approved')
           })
       })
     })
@@ -180,20 +184,21 @@ describe('Projects', function () {
           .expect(200)
           .expect(function (res) {
             assert.isObject(res.body)
-            assert.equal(res.body.experts[1], 'rejected')
+            assert.equal(res.body.experts[1].status, 'rejected')
           })
       })
     })
 
     it('should not modify existing slug', function () {
-      body.description = 'more text'
+      assert.equal(body.title, 'meow')
+      body.title = 'moo'
       return supertest(app).put(endpoint)
         .expect(200)
         .expect(function (res) {
           assert.isObject(res.body)
-          assert.equal(res.body.description, 'more test')
           assert.equal(res.body.slug, slug)
-          assert.notMatch(res.body.slug, new RegExp('more-text'))
+          assert.notMatch(res.body.slug, new RegExp('moo'))
+          assert.match(res.body.slug, new RegExp('meow'))
         })
     })
   })
