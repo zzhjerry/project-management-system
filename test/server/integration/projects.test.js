@@ -36,7 +36,7 @@ describe('Projects', function () {
       })
     })
 
-    it('should return expert object', function () {
+    it('should return expert object instead of id', function () {
       return createOneProjectWithThreeExperts$Q().then(function () {
         return supertest(app).get('/api/projects')
           .expect(200)
@@ -61,7 +61,7 @@ describe('Projects', function () {
   describe('POST /api/projects', function () {
     let body
     beforeEach(function () {
-      body = { title: 'meow', status: 'new' }
+      body = { title: 'meow', description: 'some text' }
     })
 
     afterEach(function () {
@@ -71,13 +71,15 @@ describe('Projects', function () {
 
     it('should respond 400 with validation error on duplicate title', function () {
       return factory.create('project', { title: 'meow' }).then(function () {
-        return supertest(app).post('/api/projects')
-          .send(body)
-          .expect(400, { message: 'Title already exists' })
+        return mongoose.model('Project').ensureIndexes().then(function () {
+          return supertest(app).post('/api/projects')
+            .send(body)
+            .expect(400, { message: 'Title already exists' })
+        })
       })
     })
 
-    it('should success with 201 and return created object', function () {
+    it('should success with 201, set status to "new" and return created object', function () {
       return supertest(app).post('/api/projects')
         .send(body)
         .expect(201)
@@ -88,13 +90,28 @@ describe('Projects', function () {
         })
     })
 
+    it('should only use title and description form post body', function () {
+      const extendedBody = _.merge({}, body, { slug: 'meow-12345', status: 'approved' })
+      return supertest(app).post('/api/projects')
+        .send(extendedBody)
+        .expect(201)
+        .expect(function (res) {
+          assert.equal(res.body.title, extendedBody.title)
+          assert.equal(res.body.description, extendedBody.description)
+          assert.equal(res.body.status, 'new')
+          assert.notEqual(res.body.status, extendedBody.status)
+          assert.notEqual(res.body.slug, extendedBody.slug)
+        })
+    })
+
     it('should create slug from title', function () {
       return supertest(app).post('/api/projects')
         .send(body)
         .expect(201)
         .expect(function (res) {
           assert.isObject(res.body)
-          assert.match(res.body.slug, new RegExp(slugify(res.body.title)))
+          const regexp = slugify(res.body.title) + '-\\d+'
+          assert.match(res.body.slug, new RegExp(regexp))
         })
     })
   })

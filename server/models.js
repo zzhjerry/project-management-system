@@ -51,13 +51,18 @@ const projectSchema = new Schema({
   status: {
     type: String,
     enum: ['new', 'pending', 'expired'],
+    default: 'new',
     required: true,
     trim: true
   },
   title: {
     type: String,
     required: 'Title is required',
-    unique: 'Title aleady exists',
+    unique: true,
+    trim: true
+  },
+  description: {
+    type: String,
     trim: true
   },
   slug: {
@@ -88,7 +93,7 @@ projectSchema.pre('validate', function (next) {
 projectSchema.pre('save', function (next) {
   // make sure slug doesn't change on saving if it exists.
   // if it doesn't exist, create one with slugified title + epoch timestamp
-  this.slug = this.slug || slugify(this.title) + new Date().getTime()
+  this.slug = this.slug || slugify(this.title) + '-' + new Date().getTime()
   next()
 })
 
