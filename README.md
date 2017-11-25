@@ -28,9 +28,11 @@ get a list of projects with an array of assigned experts with corresponding stat
 
 create a project
 
-**PUT `/api/projects/:slug`**: 201
+**PUT `/api/projects/:slug`**: 200
 
-Update title, description, approve, reject experts.
+Update title, description
+
+Approve / Reject experts.
 
 **All other routes and request methods not listed above will return 404**
 
