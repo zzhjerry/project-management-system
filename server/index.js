@@ -17,6 +17,9 @@ app.use(express.static(path.resolve(__dirname, '../app', 'build')))
 app.use('/api/auth', require('./auth.js'))
 app.use('/api/users', require('./users.js'))
 app.use('/api/projects', require('./projects.js'))
+app.all('/api/*', function (req, res, next) {
+  return res.status(404).end()
+})
 
 // Always return the main index.html, so react-router render the route in the client
 app.get('*', (req, res) => {

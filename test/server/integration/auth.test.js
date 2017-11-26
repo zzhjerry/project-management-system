@@ -43,7 +43,7 @@ describe('Auth / login', function () {
     it('should succeed and redirect to /dashboard if valid', function () {
       return supertest(app).post('/api/auth/login')
         .send(user)
-        .expect('Location', /\/dashboard/)
+        .expect('Location', /\?redirect=%2Fdashboard/)
         .expect(302)
     })
 

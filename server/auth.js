@@ -51,7 +51,8 @@ router.post('/login', function (req, res, next) {
     // login() method is added by passport
     req.login(user, function (err) {
       if (err) { return next(err) }
-      return res.redirect('/dashboard')
+      const redirect = encodeURIComponent('/dashboard')
+      return res.redirect('/?redirect=' + redirect)
     })
   })(req, res, next)
 })

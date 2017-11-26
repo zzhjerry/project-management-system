@@ -34,7 +34,7 @@ Update title, description
 
 Approve / Reject experts.
 
-**All other routes and request methods not listed above will return 404**
+**Other routes and request methods to `/api/*` not listed above will return 404**
 
 ## Dev Notes
 
