@@ -4,7 +4,7 @@ import logo from './logo.png'
 
 const Header = (props) => {
   return (
-    <header style={styles.header}>
+    <header style={styles.container}>
       <img style={styles.img} src={logo} alt="lynk"/>
       {props.isAuthenticated ? (
         <div style={styles.alignRight}>
@@ -21,7 +21,7 @@ const Header = (props) => {
 }
 
 const styles = {
-  header: {
+  container: {
     backgroundColor: '#f6fafa',
     padding: '20px 50px',
     display: 'flex',
