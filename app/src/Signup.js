@@ -1,23 +1,57 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { signupAsync } from './actions'
+
+/* components */
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap'
 
-const Signup = () => {
-  return (
-    <div style={styles.container}>
-      <h4>Let's Sign Up</h4>
-      <Form style={styles.form}>
-        <FormGroup>
-          <Label for="email">Email</Label>
-          <Input type="email" name="email" id="email" placeholder="Please input your emails address" />
-        </FormGroup>
-        <FormGroup>
-          <Label for="password">Password</Label>
-          <Input minLength="8" type="password" name="password" id="password" placeholder="Please input your password" />
-        </FormGroup>
-        <Button color="primary" outline block size="sm">Sign Up</Button>
-      </Form>
-    </div>
-  )
+class Signup extends React.Component {
+  render() {
+    return (
+      <div style={styles.container}>
+        <h4>Let's Sign Up</h4>
+        <Form style={styles.form} onSubmit={this.handleSubmit}>
+          <FormGroup>
+            <Label for="email">Email</Label>
+            <Input type="email" name="email" id="email" value={this.state.email}
+                   onChange={this.handleInputChange}
+                   placeholder="Please input your emails address" />
+          </FormGroup>
+          <FormGroup>
+            <Label for="password">Password</Label>
+            <Input minLength="8" type="password" name="password" value={this.state.password}
+                   onChange={this.handleInputChange}
+                   id="password" placeholder="Please input your password" />
+          </FormGroup>
+          <Button color="primary" outline block size="sm">Sign Up</Button>
+        </Form>
+      </div>
+    )
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      email: '',
+      password: ''
+    }
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  handleInputChange(event) {
+    const target = event.target
+
+    this.setState({
+      [target.name]: target.value
+    })
+  }
+
+  handleSubmit(event) {
+    const [ email, password ] = [ this.state.email, this.state.password ]
+    this.props.dispatch(signupAsync(email, password))
+    event.preventDefault()
+  }
 }
 
 const styles = {
@@ -33,4 +67,4 @@ const styles = {
   }
 }
 
-export default Signup
+export default connect()(Signup)

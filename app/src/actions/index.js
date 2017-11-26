@@ -1,3 +1,5 @@
+import superagent from 'superagent'
+
 export const RECEIVE_SIGN_UP_ERROR = 'RECEIVE_SIGN_UP_ERROR'
 export const RECEIVE_LOGIN_ERROR = 'RECEIVE_LOGIN_ERROR'
 export const REQUEST_USER = 'REQUEST_USER'
@@ -29,4 +31,9 @@ export const getUserAsync = () => (dispatch) => {
       email: 'zzh699@gmail.com'
     }), 200)
   )
+}
+
+export const signupAsync = (email, password) => (dispatch) => {
+  return superagent.post('/api/users').send({ email, password })
+    .catch(error => dispatch(receiveSignupError(error)))
 }
