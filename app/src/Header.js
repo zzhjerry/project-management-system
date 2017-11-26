@@ -1,17 +1,26 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { logoutAsync } from './actions'
+
+/* components */
 import { NavLink, withRouter } from 'react-router-dom'
 import { Button } from 'reactstrap'
 import logo from './logo.png'
 
 const Header = (props) => {
+  const { history, dispatch } = props
+  const redirect = () => history.push('/')
+  const logout = () => dispatch(logoutAsync(redirect))
+
   return (
     <header style={styles.container}>
       <NavLink to="/"><img style={styles.img} src={logo} alt="lynk"/></NavLink>
       {props.email ? (
         <div style={styles.alignRight}>
           <span style={styles.email}>Welcome: {props.email}</span>
-          <Button outline color="danger" size="sm">Logout</Button>
+          <Button outline color="danger" size="sm" onClick={logout}>
+            Logout
+          </Button>
         </div>
       ) : (
         <SignupOrLogin></SignupOrLogin>
@@ -72,4 +81,4 @@ const mapStateToProps = state => ({
   email: state.user.data && state.user.data.email
 })
 
-export default connect(mapStateToProps)(Header)
+export default connect(mapStateToProps)(withRouter(Header))

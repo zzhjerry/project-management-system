@@ -38,3 +38,13 @@ export const signupAsync = (email, password, cb) => (dispatch) => {
     .then(cb)
     .catch(error => dispatch(receiveSignupError(error)))
 }
+
+export const loginAsync = (email, password, cb) => (dispatch) => {
+  return superagent.post('/api/auth/login').send({ email, password })
+    .then(cb)
+    .catch(error => dispatch(receiveLoginError(error)))
+}
+
+export const logoutAsync = (cb) => (dispatch) => {
+  return superagent.get('/api/auth/logout').then(cb)
+}
