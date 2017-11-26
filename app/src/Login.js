@@ -4,7 +4,7 @@ import { Button, Form, FormGroup, Label, Input } from 'reactstrap'
 const Login = () => {
   return (
     <div style={styles.container}>
-      <h3>Welcome to Lynk Project Admin Panel</h3>
+      <h4>Welcome, Please Login</h4>
       <Form style={styles.form}>
         <FormGroup>
           <Label for="email">Email</Label>
