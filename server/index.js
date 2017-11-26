@@ -22,7 +22,7 @@ app.all('/api/*', function (req, res, next) {
 })
 
 // Always return the main index.html, so react-router render the route in the client
-app.get('*', (req, res) => {
+app.get('*', function (req, res, next) {
   res.sendFile(path.resolve(__dirname, '../app', 'build', 'index.html'))
 })
 
