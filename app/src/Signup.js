@@ -28,8 +28,8 @@ const styles = {
 
   form: {
     textAlign: 'left',
-    width: '400px',
-    margin: '50px auto'
+    width: '300px',
+    margin: '30px auto'
   }
 }
 

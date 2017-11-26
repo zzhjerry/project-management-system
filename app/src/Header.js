@@ -1,23 +1,40 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink, withRouter } from 'react-router-dom'
 import { Button } from 'reactstrap'
 import logo from './logo.png'
+
+const SignupOrLogin = withRouter(({ location }) => {
+  const pathname = location.pathname
+  if (pathname === '/') {
+    return (
+      <NavLink to="/signup" style={styles.alignRight}>
+        <Button outline color="success">
+          Sign Up
+        </Button>
+      </NavLink>
+    )
+  } else {
+    return (
+      <NavLink to="/" style={styles.alignRight}>
+        <Button outline color="success">
+          Login
+        </Button>
+      </NavLink>
+    )
+  }
+})
 
 const Header = (props) => {
   return (
     <header style={styles.container}>
-      <Link to="/"><img style={styles.img} src={logo} alt="lynk"/></Link>
+      <NavLink to="/"><img style={styles.img} src={logo} alt="lynk"/></NavLink>
       {props.isAuthenticated ? (
         <div style={styles.alignRight}>
           <span style={styles.email}>Welcome: {props.email}</span>
           <Button outline color="danger" size="sm">Logout</Button>
         </div>
       ) : (
-        <Link to="/signup" style={{ textDecoration: 'none' }}>
-          <Button outline color="success" style={styles.alignRight}>
-            Sign Up
-          </Button>
-        </Link>
+        <SignupOrLogin></SignupOrLogin>
       )}
     </header>
   )
@@ -37,6 +54,8 @@ const styles = {
   },
 
   alignRight: {
+    textDecoration: 'none',
+    margin: '10px 0',
     height: '100%',
     display: 'flex',
     alignItems: 'center'
