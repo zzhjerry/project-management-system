@@ -1,20 +1,28 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {
   BrowserRouter as Router,
   Route,
 } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { getUserAsync } from './actions'
+
+/* components */
 import Header from './Header'
 import Login from './Login'
 import Signup from './Signup'
 import Dashboard from './Dashboard'
 import ProjectDetail from './ProjectDetail'
 
-class App extends Component {
+class App extends React.Component {
+  componentDidMount() {
+    this.props.dispatch(getUserAsync())
+  }
+
   render() {
     return (
       <Router>
         <div>
-          <Header isAuthenticated={false} email={'zzh699@gmail.com'}></Header>
+          <Header></Header>
           <Route exact path="/" component={Login}/>
           <Route exact path="/signup" component={Signup}/>
           <Route exact path="/dashboard" component={Dashboard}/>
@@ -25,4 +33,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default connect()(App)

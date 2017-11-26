@@ -1,7 +1,24 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { NavLink, withRouter } from 'react-router-dom'
 import { Button } from 'reactstrap'
 import logo from './logo.png'
+
+const Header = (props) => {
+  return (
+    <header style={styles.container}>
+      <NavLink to="/"><img style={styles.img} src={logo} alt="lynk"/></NavLink>
+      {props.email ? (
+        <div style={styles.alignRight}>
+          <span style={styles.email}>Welcome: {props.email}</span>
+          <Button outline color="danger" size="sm">Logout</Button>
+        </div>
+      ) : (
+        <SignupOrLogin></SignupOrLogin>
+      )}
+    </header>
+  )
+}
 
 const SignupOrLogin = withRouter(({ location }) => {
   const pathname = location.pathname
@@ -23,22 +40,6 @@ const SignupOrLogin = withRouter(({ location }) => {
     )
   }
 })
-
-const Header = (props) => {
-  return (
-    <header style={styles.container}>
-      <NavLink to="/"><img style={styles.img} src={logo} alt="lynk"/></NavLink>
-      {props.isAuthenticated ? (
-        <div style={styles.alignRight}>
-          <span style={styles.email}>Welcome: {props.email}</span>
-          <Button outline color="danger" size="sm">Logout</Button>
-        </div>
-      ) : (
-        <SignupOrLogin></SignupOrLogin>
-      )}
-    </header>
-  )
-}
 
 const styles = {
   container: {
@@ -67,4 +68,8 @@ const styles = {
   }
 }
 
-export default Header
+const mapStateToProps = state => ({
+  email: state.user.data && state.user.data.email
+})
+
+export default connect(mapStateToProps)(Header)
