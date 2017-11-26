@@ -12,7 +12,7 @@ const Login = () => {
         </FormGroup>
         <FormGroup>
           <Label for="password">Password</Label>
-          <Input minlength="8" type="password" name="password" id="password" placeholder="Please input your password" />
+          <Input minLength="8" type="password" name="password" id="password" placeholder="Please input your password" />
         </FormGroup>
         <Button color="primary" outline block size="sm">Login</Button>
       </Form>

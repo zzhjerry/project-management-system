@@ -1,20 +1,23 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { Button } from 'reactstrap'
 import logo from './logo.png'
 
 const Header = (props) => {
   return (
     <header style={styles.container}>
-      <img style={styles.img} src={logo} alt="lynk"/>
+      <Link to="/"><img style={styles.img} src={logo} alt="lynk"/></Link>
       {props.isAuthenticated ? (
         <div style={styles.alignRight}>
           <span style={styles.email}>Welcome: {props.email}</span>
           <Button outline color="danger" size="sm">Logout</Button>
         </div>
       ) : (
-        <Button outlien color="success" size="sm" style={styles.alignRight}>
-          Sign Up
-        </Button>
+        <Link to="/signup" style={{ textDecoration: 'none' }}>
+          <Button outline color="success" style={styles.alignRight}>
+            Sign Up
+          </Button>
+        </Link>
       )}
     </header>
   )
@@ -34,11 +37,13 @@ const styles = {
   },
 
   alignRight: {
+    height: '100%',
     display: 'flex',
     alignItems: 'center'
   },
 
   email: {
+    color: '#777',
     padding: '0 10px'
   }
 }

@@ -14,7 +14,7 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Header isAuthenticated={true} email={'zzh699@gmail.com'}></Header>
+          <Header isAuthenticated={false} email={'zzh699@gmail.com'}></Header>
           <Route exact path="/" component={Login}/>
           <Route exact path="/signup" component={Signup}/>
           <Route exact path="/dashboard" component={Dashboard}/>
