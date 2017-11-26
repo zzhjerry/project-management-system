@@ -46,7 +46,7 @@ describe('Users', function () {
       return supertest(app).post('/api/users')
         .send(user)
         .expect(302)
-        .expect('Location', /\?redirect=%2Fdashboard/)
+        .expect('Location', '/dashboard')
     })
 
     it('should respond 400 with validation error on short password', function () {
