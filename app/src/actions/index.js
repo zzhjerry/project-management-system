@@ -33,7 +33,8 @@ export const getUserAsync = () => (dispatch) => {
   )
 }
 
-export const signupAsync = (email, password) => (dispatch) => {
+export const signupAsync = (email, password, cb) => (dispatch) => {
   return superagent.post('/api/users').send({ email, password })
+    .then(cb)
     .catch(error => dispatch(receiveSignupError(error)))
 }

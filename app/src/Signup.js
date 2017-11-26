@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { signupAsync } from './actions'
 
@@ -49,7 +50,9 @@ class Signup extends React.Component {
 
   handleSubmit(event) {
     const [ email, password ] = [ this.state.email, this.state.password ]
-    this.props.dispatch(signupAsync(email, password))
+    const { history } = this.props
+    const onSuccess = () => history.push('/dashboard')
+    this.props.dispatch(signupAsync(email, password, onSuccess))
     event.preventDefault()
   }
 }
@@ -67,4 +70,4 @@ const styles = {
   }
 }
 
-export default connect()(Signup)
+export default connect()(withRouter(Signup))
