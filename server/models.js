@@ -68,7 +68,8 @@ const projectSchema = new Schema({
   slug: {
     type: String,
     unique: true,
-    trim: true
+    trim: true,
+    lowercase: true
   },
   experts: [{
     expert: {

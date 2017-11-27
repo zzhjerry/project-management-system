@@ -3,7 +3,9 @@ import {
   REQUEST_USER,
   RECEIVE_USER,
   RECEIVE_LOGIN_ERROR,
-  RECEIVE_SIGN_UP_ERROR
+  RECEIVE_SIGN_UP_ERROR,
+  REQUEST_PROJECTS,
+  RECEIVE_PROJECTS
 } from '../actions'
 
 const signupError = (state=null, actions) => {
@@ -38,4 +40,23 @@ const user = (state={
   }
 }
 
-export default combineReducers({ signupError, loginError, user })
+const projects = (state={
+  isFetching: false,
+  data: null
+}, actions) => {
+  switch (actions.type) {
+    case REQUEST_PROJECTS:
+      return { ...state, isFetching: true }
+    case RECEIVE_PROJECTS:
+      return { ...state, isFetching: false, data: actions.data }
+    default:
+      return state
+  }
+}
+
+export default combineReducers({
+  signupError,
+  loginError,
+  user,
+  projects
+})
