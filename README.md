@@ -8,17 +8,17 @@ All `post` request should use `json` as format (i.e. Send `Content-Type: applica
 
 API endpoints are grouped under `/api` url with following routes:
 
-**POST `/api/auth/login`**: 302
+**POST `/api/auth/login`**: 200
 
-redirect user to `/dashboard`. Assign a session that expires in 2 weeks.
+return user's profile e.g. `{ email: user.email}`. Assign a session that expires in 2 weeks.
 
-**GET `/api/auth/logout`**: 302
+**GET `/api/auth/logout`**: 200
 
 redirect user to `/`. Clear `req.user`, doesn't clear session.
 
-**POST `/api/users`**: 302
+**POST `/api/users`**: 200
 
-redirect user to `/dashboard`. Create user in DB
+return user's profile e.g. `{ email: user.email}`
 
 **GET `/api/projects`**: 200
 

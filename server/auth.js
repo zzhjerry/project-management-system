@@ -11,7 +11,7 @@ module.exports = function (passport) {
       // login() method is added by passport
       req.login(user, function (err) {
         if (err) { return next(err) }
-        return res.redirect('/dashboard')
+        return res.json({ email: user.email })
       })
     })(req, res, next)
   })
@@ -19,7 +19,7 @@ module.exports = function (passport) {
   router.get('/logout', function (req, res, next) {
     // logout() method is added by passport
     req.logout()
-    return res.redirect('/')
+    return res.end()
   })
 
   return router

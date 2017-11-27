@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import {
   REQUEST_USER,
   RECEIVE_USER,
+  RECEIVE_LOGOUT,
   RECEIVE_LOGIN_ERROR,
   RECEIVE_SIGN_UP_ERROR,
   REQUEST_PROJECTS,
@@ -35,6 +36,8 @@ const user = (state={
       return { ...state, isFetching: true }
     case RECEIVE_USER:
       return { ...state, isFetching: false, data: actions.data }
+    case RECEIVE_LOGOUT:
+      return { ...state, ifFetching: false, data: null }
     default:
       return state
   }

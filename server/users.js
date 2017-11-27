@@ -16,7 +16,7 @@ router.post('/', function (req, res, next) {
     return res.json({ message: invalidPasswordError.message })
   }
   return user.save().then(function () {
-    return res.redirect('/dashboard')
+    return res.json({ email: user.email })
   }).catch(function (err) {
     if (err.code === 11000) {
       // error when creating duplicate accounts

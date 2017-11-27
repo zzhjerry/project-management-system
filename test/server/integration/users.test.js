@@ -42,11 +42,10 @@ describe('Users', function () {
       return mongoose.connection.db.dropCollection('users')
     })
 
-    it('should redirect to /dashboard on success', function () {
+    it('should return user email on success', function () {
       return supertest(app).post('/api/users')
         .send(user)
-        .expect(302)
-        .expect('Location', '/dashboard')
+        .expect(200, { email: user.email })
     })
 
     it('should respond 400 with validation error on short password', function () {

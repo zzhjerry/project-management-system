@@ -40,11 +40,10 @@ describe('Auth / login', function () {
       user = { email: 'user@gmail.com', password: '12345678' }
     })
 
-    it('should succeed and redirect to /dashboard if valid', function () {
+    it('should succeed and return email if valid', function () {
       return supertest(app).post('/api/auth/login')
         .send(user)
-        .expect('Location', '/dashboard')
-        .expect(302)
+        .expect(200, { email: user.email })
     })
 
     it('should respond 401 and send invalid password message', function () {
@@ -65,10 +64,9 @@ describe('Auth / login', function () {
 
 describe('Auth / logout', function () {
   describe('GET /api/auth/logout', function () {
-    it('should redirect to / on success', function () {
+    it('should return 200 on success', function () {
       return supertest(app).get('/api/auth/logout')
-        .expect(302)
-        .expect('Location', '/')
+        .expect(200)
     })
   })
 })
