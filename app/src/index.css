@@ -4,6 +4,14 @@ body {
   font-family: sans-serif;
 }
 
-button:hover {
+button:not([disabled]):hover {
   cursor: pointer
+}
+
+button:disabled {
+  cursor: text
+}
+
+h1 {
+  font-size: 36px;
 }

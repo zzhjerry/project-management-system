@@ -7,6 +7,9 @@ export const RECEIVE_USER = 'RECEIVE_USER'
 export const REQUEST_PROJECTS = 'REQUEST_PROJECTS'
 export const RECEIVE_PROJECTS = 'RECEIVE_PROJECTS'
 export const RECEIVE_LOGOUT = 'RECEIVE_LOGOUT'
+export const REQUEST_PROJECT = 'REQUEST_PROJECT'
+export const RECEIVE_PROJECT = 'RECEIVE_PROJECT'
+export const RECEIVE_PROJECT_ERROR = 'RECEIVE_PROJECT_ERROR'
 
 export const receiveSignupError = (error) => ({
   type: RECEIVE_SIGN_UP_ERROR,
@@ -40,6 +43,20 @@ const receiveLogout = () => ({
   type: RECEIVE_LOGOUT
 })
 
+const requestProject = () => ({
+  type: REQUEST_PROJECT
+})
+
+const receiveProject = (data) => ({
+  type: RECEIVE_PROJECT,
+  data
+})
+
+const receiveProjectError = (error) => ({
+  type: RECEIVE_PROJECT_ERROR,
+  error
+})
+
 export const getUserAsync = (cb) => (dispatch) => {
   return superagent.get('/api/users/current')
     .withCredentials()
@@ -68,6 +85,14 @@ export const logoutAsync = (cb) => (dispatch) => {
 export const getProjectsAsync = () => (dispatch) => {
   dispatch(requestProjects())
   return superagent.get('/api/projects')
+    .withCredentials()
     .then(res => dispatch(receiveProjects(res.body)))
 
+}
+
+export const getProjectAsync = (slug) => (dispatch) => {
+  dispatch(requestProject())
+  return superagent.get(`/api/projects/${slug}`)
+    .then(res => dispatch(receiveProject(res.body)))
+    .catch(error => dispatch(receiveProjectError(error)))
 }

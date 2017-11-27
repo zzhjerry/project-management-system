@@ -70,7 +70,7 @@ class Project extends React.Component {
           <ul className="list-unstyled">
             {approvedExperts.map((record, index) => {
               const { expert: { firstname, lastname } } = record
-              return <li className="text-secondary">{firstname} {lastname}</li>
+              return <li key={record.is} className="text-secondary">{firstname} {lastname}</li>
             })}
           </ul>
         </Collapse>

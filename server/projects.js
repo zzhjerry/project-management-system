@@ -26,6 +26,12 @@ router.put('/:slug', function (req, res, next) {
     .catch(next)
 })
 
+router.get('/:slug', function (req, res, next) {
+  return Project.findOne({ slug: req.params.slug })
+    .then(res.json.bind(res))
+    .catch(next)
+})
+
 /**
  * Handle errors when unique rule is violated or validation error happened.
  */
