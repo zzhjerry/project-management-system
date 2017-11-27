@@ -12,7 +12,6 @@ const Q = require('bluebird')
 const status = _.concat(_.fill(Array(3), 'new'), _.fill(Array(6), 'pending'))
 const projects = _.map(status, function (value, index) {
   return {
-    title: 'Project ' + (index + 1),
     status: value
   }
 })
