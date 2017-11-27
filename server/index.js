@@ -1,20 +1,18 @@
 const path = require('path')
 const express = require('express')
-var app = express()
+const app = express()
 app.use(require('cookie-parser')())
 app.use(require('body-parser').json())
 app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }))
-
-// Initialize Passport and restore authentication state, if any, from the
-// session.
-const passport = require('passport')
+const passport = require('./passport.js')
+// we initialize both passport and auth router in here
 app.use(passport.initialize())
 app.use(passport.session())
 
 // Serve static assets
 app.use(express.static(path.resolve(__dirname, '../app', 'build')))
 
-app.use('/api/auth', require('./auth.js'))
+app.use('/api/auth', require('./auth.js')(passport))
 app.use('/api/users', require('./users.js'))
 app.use('/api/projects', require('./projects.js'))
 app.all('/api/*', function (req, res, next) {

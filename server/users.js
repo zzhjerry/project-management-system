@@ -28,4 +28,15 @@ router.post('/', function (req, res, next) {
   })
 })
 
+/**
+ * Get current user
+ */
+router.get('/current', function (req, res, next) {
+  if (req.user) {
+    return res.json({ email: req.user.email })
+  } else {
+    return res.status(404).end()
+  }
+})
+
 module.exports = router
