@@ -104,6 +104,17 @@ Inspired by [this artical](https://medium.com/of-all-things-tech-progress/starti
 Also use [passport](http://www.passportjs.org/docs/) as it's reliable and can be configured for
 various other authentication needs.
 
+## TODOS
+
+[ ] Project Detail View
+[ ] Approve / Reject expert on project detail view
+[ ] Don't show approve, reject / edit button for anonymouse user
+[ ] New Project form and Project Edit form
+[ ] Redirect anonymouse user from /dashboard to /, automatically redirect them back after login
+[ ] Add spinner
+[ ] Form Error handling
+[ ] Codeceptjs e2e test
+
 ## Change log
 
 #### v0.2.0 - 20171126 (@jerry)
