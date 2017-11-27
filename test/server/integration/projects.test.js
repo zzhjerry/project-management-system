@@ -9,23 +9,6 @@ const slugify = require('slug')
 const factory = require('./factory.js')
 const app = require('../../../server/index.js')
 
-/**
- * Create a project with three experts two approved and one rejected
- *
- * @param {Object} override - override default project title, description etc.
- * @return {Promise.<Project>}
- */
-function createOneProjectWithThreeExperts$Q (override) {
-  // build 1 project with 3 experts
-  return factory.createMany('expert', 3).then(function (experts) {
-    const projectExperts = _.zipWith(['approved', 'approved', 'rejected'], experts, function (status, expert) {
-      return { expert: expert.id, status: status }
-    })
-    const data = _.merge({}, override, { experts: projectExperts })
-    return factory.create('project', data)
-  })
-}
-
 describe('Projects', function () {
   describe('GET /api/projects', function () {
     afterEach(function () {
@@ -34,7 +17,7 @@ describe('Projects', function () {
     })
 
     it('should return all projects', function () {
-      return createOneProjectWithThreeExperts$Q().then(function () {
+      return factory.createProjectWithExperts$Q().then(function () {
         return supertest(app).get('/api/projects')
           .expect(200)
           .expect(function (res) {
@@ -44,7 +27,7 @@ describe('Projects', function () {
     })
 
     it('should return expert object instead of id', function () {
-      return createOneProjectWithThreeExperts$Q().then(function () {
+      return factory.createProjectWithExperts$Q().then(function () {
         return supertest(app).get('/api/projects')
           .expect(200)
           .expect(function (res) {
@@ -162,7 +145,7 @@ describe('Projects', function () {
     })
 
     it('should approve expert', function () {
-      return createOneProjectWithThreeExperts$Q().then(function (record) {
+      return factory.createProjectWithExperts$Q().then(function (record) {
         const doc = record._doc
         assert.equal(doc.experts[2].status, 'rejected')
         doc.experts[2].status = 'approved'
@@ -176,7 +159,7 @@ describe('Projects', function () {
     })
 
     it('should reject expert', function () {
-      return createOneProjectWithThreeExperts$Q().then(function (record) {
+      return factory.createProjectWithExperts$Q().then(function (record) {
         const doc = record._doc
         assert.equal(doc.experts[1].status, 'approved')
         doc.experts[1].status = 'rejected'

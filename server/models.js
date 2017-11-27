@@ -80,6 +80,8 @@ const projectSchema = new Schema({
       enum: ['approved', 'rejected']
     }
   }]
+}, {
+  timestamps: true
 })
 
 projectSchema.pre('validate', function (next) {
