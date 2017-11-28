@@ -22,7 +22,7 @@ class ProjectDetail extends React.Component {
         <ConnectedProjectHeader title={title} slug={slug}></ConnectedProjectHeader>
         <ProjectStatus status={status} createdAt={createdAt}></ProjectStatus>
         <Description description={description} slug={slug}></Description>
-        <ConnectedExpertList experts={experts} slug={slug}></ConnectedExpertList>
+        <ExpertList experts={experts} slug={slug}></ExpertList>
       </div>
     )
   }
@@ -147,22 +147,10 @@ class Description extends React.Component {
 
 const ExpertList = (props) => {
   if (!props.experts) return (<p></p>)
-  const changeStatus = (expert, newStatus) => {
-    // deep copy array
-    const experts = JSON.parse(JSON.stringify(props.experts))
-    const index = experts.findIndex(x => x.expert._id === expert._id)
-    experts[index].status = newStatus
-    const { dispatch, slug } = props
-    const update$Q = superagent.put(`/api/projects/${slug}`)
-          .send({ experts })
-          .then(res => window.location.reload())
-          .catch(err => err)
-    dispatch(actions.submit('project', update$Q))
-  }
 
   const experts = props.experts.map(expert => (
     <ListGroupItem key={expert.expert._id}>
-      <Expert expert={expert} changeStatus={changeStatus}></Expert>
+      <ConnectedExpert expert={expert} slug={props.slug}></ConnectedExpert>
     </ListGroupItem>
   ))
 
@@ -173,8 +161,6 @@ const ExpertList = (props) => {
     </div>
   )
 }
-
-const ConnectedExpertList = connect()(ExpertList)
 
 class Expert extends React.Component {
   // props.expert contains expert detail and status
@@ -198,12 +184,26 @@ class Expert extends React.Component {
   }
 
   changeStatus() {
+    const { dispatch, slug } = this.props
     const { expert, status } = this.props.expert
     const approved = status === 'approved'
     const newStatus = approved ? 'rejected' : 'approved'
-    this.props.changeStatus(expert, newStatus)
+    const body = {
+      _id: expert._id,
+      status: newStatus
+    }
+    const update$Q = superagent.put(`/api/projects/${slug}`)
+          .send({ expert: body })
+          .then(res => res)
+          .catch(err => err)
+    dispatch(actions.change(track(
+      'project.experts[].status', { 'expert._id': expert._id }), newStatus))
+    dispatch(actions.submit('project', update$Q))
+
   }
 }
+
+const ConnectedExpert = connect()(Expert)
 
 class DescriptionEditAndPreview extends React.Component {
   constructor(props) {

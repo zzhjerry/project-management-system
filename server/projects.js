@@ -19,7 +19,21 @@ router.post('/', function (req, res, next) {
 })
 
 router.put('/:slug', function (req, res, next) {
-  const data = _.pick(req.body, ['title', 'description', 'experts'])
+  const data = _.pick(req.body, ['title', 'description', 'expert'])
+  // update expert status, accept expert as string and object
+  if (data.expert) {
+    var expertId = data.expert._id
+    var status = data.expert.status
+    return Project.findOneAndUpdate(
+      { slug: req.params.slug, 'experts.expert': expertId },
+      {
+        '$set': {
+          'experts.$.status': status
+        }
+      },
+      { new: true }
+    ).exec().then(res.json.bind(res)).catch(next)
+  }
   return Project.findOneAndUpdate({ slug: req.params.slug }, data, { new: true })
     .exec()
     .then(res.json.bind(res))
