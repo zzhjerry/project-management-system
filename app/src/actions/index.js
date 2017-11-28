@@ -1,4 +1,5 @@
 import superagent from 'superagent'
+import { actions } from 'react-redux-form'
 
 export const RECEIVE_SIGN_UP_ERROR = 'RECEIVE_SIGN_UP_ERROR'
 export const RECEIVE_LOGIN_ERROR = 'RECEIVE_LOGIN_ERROR'
@@ -91,8 +92,16 @@ export const getProjectsAsync = () => (dispatch) => {
 }
 
 export const getProjectAsync = (slug) => (dispatch) => {
-  dispatch(requestProject())
   return superagent.get(`/api/projects/${slug}`)
-    .then(res => dispatch(receiveProject(res.body)))
-    .catch(error => dispatch(receiveProjectError(error)))
+    .then(res => dispatch(actions.load('project', res.body)))
+    .catch(error => dispatch(actions.setErrors('project', error)))
+}
+
+export const updateProjectAsync = (slug, body) => (dispatch) => {
+  const update$Q = superagent.put(`/api/projects/${slug}`)
+        .send(body)
+        .then(res => dispatch(receiveProject(res.body)))
+        .catch(err => err)
+
+  dispatch(actions.submit('project', update$Q))
 }

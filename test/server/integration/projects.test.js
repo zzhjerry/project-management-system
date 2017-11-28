@@ -172,6 +172,19 @@ describe('Projects', function () {
       })
     })
 
+    it('should keep value of fields that are not provided in post body', function () {
+      const originalDescription = body.description
+      assert.ok(originalDescription)
+      delete body.description
+      body.title = 'moo'
+      return supertest(app).put(endpoint).send(body)
+        .expect(200)
+        .expect(function (res) {
+          assert.equal(res.body.title, 'moo')
+          assert.equal(res.body.description, originalDescription)
+        })
+    })
+
     it('should not modify existing slug', function () {
       assert.equal(body.title, 'meow')
       body.title = 'moo'

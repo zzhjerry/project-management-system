@@ -7,7 +7,7 @@ import reducer from './reducers'
 /* components */
 import App from './App'
 
-/* store singleton */
+/* setup store */
 const store = createStore(
   reducer,
   applyMiddleware(thunk)

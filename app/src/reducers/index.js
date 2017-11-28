@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import { createForms } from 'react-redux-form'
 import {
   REQUEST_USER,
   RECEIVE_USER,
@@ -84,5 +85,9 @@ export default combineReducers({
   loginError,
   user,
   projects,
-  currentProject
+  currentProject,
+  ...createForms({
+    // Initial state will be provided upon receiving a project object
+    project: {}
+  })
 })
