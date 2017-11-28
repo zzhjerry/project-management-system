@@ -28,6 +28,7 @@ router.put('/:slug', function (req, res, next) {
 
 router.get('/:slug', function (req, res, next) {
   return Project.findOne({ slug: req.params.slug })
+    .populate({ path: 'experts.expert' })
     .then(res.json.bind(res))
     .catch(next)
 })

@@ -5,8 +5,10 @@ import { getProjectAsync } from './actions'
 import md from 'markdown-it'
 
 /* components */
-import { actions, Form, Control } from 'react-redux-form'
-import { Button, Badge, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap'
+import { track, actions, Form, Control } from 'react-redux-form'
+import {
+  Button, Badge, Nav, NavItem, NavLink,
+  TabContent, TabPane, ListGroup, ListGroupItem } from 'reactstrap'
 
 class ProjectDetail extends React.Component {
   render() {
@@ -14,13 +16,13 @@ class ProjectDetail extends React.Component {
       return <h1>Loading</h1>
     }
 
-    const { title, status, createdAt, description, slug } = this.props.project
+    const { title, status, createdAt, description, slug, experts } = this.props.project
     return (
       <div className="w-75 m-auto p-5">
         <ConnectedProjectHeader title={title} slug={slug}></ConnectedProjectHeader>
         <ProjectStatus status={status} createdAt={createdAt}></ProjectStatus>
         <Description description={description} slug={slug}></Description>
-        <ExpertList></ExpertList>
+        <ConnectedExpertList experts={experts} slug={slug}></ConnectedExpertList>
       </div>
     )
   }
@@ -143,9 +145,65 @@ class Description extends React.Component {
   }
 }
 
-const ExpertList = () => (
-  <p>experts</p>
-)
+const ExpertList = (props) => {
+  if (!props.experts) return (<p></p>)
+  const changeStatus = (expert, newStatus) => {
+    // deep copy array
+    const experts = JSON.parse(JSON.stringify(props.experts))
+    const index = experts.findIndex(x => x.expert._id === expert._id)
+    experts[index].status = newStatus
+    const { dispatch, slug } = props
+    const update$Q = superagent.put(`/api/projects/${slug}`)
+          .send({ experts })
+          .then(res => window.location.reload())
+          .catch(err => err)
+    dispatch(actions.submit('project', update$Q))
+  }
+
+  const experts = props.experts.map(expert => (
+    <ListGroupItem key={expert.expert._id}>
+      <Expert expert={expert} changeStatus={changeStatus}></Expert>
+    </ListGroupItem>
+  ))
+
+  return (
+    <div className="mt-3 w-75">
+      <p className="lead">Experts</p>
+      <ListGroup>{experts}</ListGroup>
+    </div>
+  )
+}
+
+const ConnectedExpertList = connect()(ExpertList)
+
+class Expert extends React.Component {
+  // props.expert contains expert detail and status
+  render() {
+    const { expert={}, status='' } = this.props.expert
+    const approved = status === 'approved'
+    return (
+      <div className="d-flex align-items-center">
+        <div>{`${expert.firstname} ${expert.lastname}`}</div>
+        <Badge color={approved ? 'success' : 'danger'} className="ml-2 mr-auto">{status}</Badge>
+        <Button onClick={this.changeStatus} color={approved ? 'danger' : 'success' } size="sm">
+          {approved ? 'Reject' : 'Approve' }
+        </Button>
+      </div>
+    )
+  }
+
+  constructor(props) {
+    super(props)
+    this.changeStatus = this.changeStatus.bind(this)
+  }
+
+  changeStatus() {
+    const { expert, status } = this.props.expert
+    const approved = status === 'approved'
+    const newStatus = approved ? 'rejected' : 'approved'
+    this.props.changeStatus(expert, newStatus)
+  }
+}
 
 class DescriptionEditAndPreview extends React.Component {
   constructor(props) {
