@@ -113,7 +113,6 @@ class ProjectHeader extends React.Component {
   }
 
   toggleEditable() {
-    console.log('called')
     this.setState({ editable: !this.state.editable })
   }
 
