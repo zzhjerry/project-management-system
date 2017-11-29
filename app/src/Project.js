@@ -1,6 +1,7 @@
 import React from 'react'
 import superagent from 'superagent'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { getProjectAsync } from './actions'
 import md from 'markdown-it'
 
@@ -37,9 +38,40 @@ class ProjectNew extends React.Component {
   render() {
     return (
       <div className="w-75 m-auto p-5">
-        <h1>Hi</h1>
+        <Form className="w-75" model="newProject" onSubmit={this.handleSubmit}>
+          <Control.text model=".title" className="my-3 w-50" placeholder="Title"></Control.text>
+          <MarkdownEditAndPreview
+            model=".description"
+            text={this.props.project.description}>
+          </MarkdownEditAndPreview>
+          <Button type="submit" className="my-3" color="success">Save</Button>
+        </Form>
       </div>
     )
+  }
+
+  componentWillMount() {
+    const { dispatch } = this.props
+    dispatch(actions.load('project', {
+      title: '',
+      description: ''
+    }))
+  }
+
+  constructor(props) {
+    super(props)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  handleSubmit(project) {
+    const { dispatch, history } = this.props
+    const update$Q = superagent.post(`/api/projects`)
+          .send({ ...project })
+          .then(res => {
+            history.push('/dashboard')
+          })
+          .catch(err => err)
+    dispatch(actions.submit('newProject', update$Q))
   }
 }
 
@@ -218,21 +250,8 @@ const ConnectedExpert = connect()(Expert)
 class DescriptionEditAndPreview extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      activeTab: '1'
-    }
-
-    this.toggle = this.toggle.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
-  }
-
-  toggle(tab) {
-    if (this.state.activeTab !== tab) {
-      this.setState({
-        activeTab: tab
-      })
-    }
   }
 
   handleSubmit(description) {
@@ -257,30 +276,10 @@ class DescriptionEditAndPreview extends React.Component {
   render() {
     return (
       <Form model="project.description" className="w-75" onSubmit={(description) => this.handleSubmit(description)}>
-        <Nav tabs>
-          <NavItem>
-            <NavLink
-              className={this.state.activeTab==='1' ? 'active' : ''}
-              onClick={() => this.toggle('1')}>
-              Write
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
-              className={this.state.activeTab==='2' ? 'active' : ''}
-              onClick={() => this.toggle('2')}>
-              Preview
-            </NavLink>
-          </NavItem>
-        </Nav>
-        <TabContent activeTab={this.state.activeTab} className="border border-top-0 border-left-0 border-right-0">
-          <TabPane tabId="1">
-            <Control.textarea className="w-100 border-0 bg-light p-2" rows={10} model="project.description"></Control.textarea>
-          </TabPane>
-          <TabPane tabId="2" className="p-2">
-            <MarkdownDisplay text={this.props.text}></MarkdownDisplay>
-          </TabPane>
-        </TabContent>
+        <MarkdownEditAndPreview
+          model="project.description"
+          text={this.props.text}>
+        </MarkdownEditAndPreview>
         <div className="d-flex flex-row-reverse my-2">
           <Button type="submit" size="sm" color="success">Submit</Button>
           <Button className="mx-2" size="sm" color="danger" onClick={this.handleCancel}>Cancel</Button>
@@ -308,6 +307,56 @@ const DescriptionDisplay = (props) => {
   )
 }
 
+class MarkdownEditAndPreview extends React.Component {
+  render() {
+    const { text, model } = this.props
+    return (
+      <div>
+        <Nav tabs>
+          <NavItem>
+            <NavLink
+              className={this.state.activeTab==='1' ? 'active' : ''}
+              onClick={() => this.toggle('1')}>
+              Write
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              className={this.state.activeTab==='2' ? 'active' : ''}
+              onClick={() => this.toggle('2')}>
+              Preview
+            </NavLink>
+          </NavItem>
+        </Nav>
+        <TabContent activeTab={this.state.activeTab} className="border border-top-0 border-left-0 border-right-0">
+          <TabPane tabId="1">
+            <Control.textarea className="w-100 border-0 bg-light p-2" rows={10} model={model}></Control.textarea>
+          </TabPane>
+          <TabPane tabId="2" className="p-2">
+            <MarkdownDisplay text={text}></MarkdownDisplay>
+          </TabPane>
+        </TabContent>
+      </div>
+    )
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      activeTab: '1'
+    }
+    this.toggle = this.toggle.bind(this)
+  }
+
+  toggle(tab) {
+    if (this.state.activeTab !== tab) {
+      this.setState({
+        activeTab: tab
+      })
+    }
+  }
+}
+
 const MarkdownDisplay = (props) => {
   const { text = '' } = props
   const html = md().render(text)
@@ -323,7 +372,7 @@ const mapStateToProps = state => {
 }
 
 const ConnectedProjectDetail = connect(mapStateToProps)(ProjectDetail)
-const ConnectedProjectNew = connect()(ProjectNew)
+const ConnectedProjectNew = connect((state) => ({ project: state.newProject}))(withRouter(ProjectNew))
 export {
   ConnectedProjectDetail as ProjectDetail,
   ConnectedProjectNew as ProjectNew

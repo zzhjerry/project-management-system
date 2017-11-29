@@ -88,6 +88,7 @@ export default combineReducers({
   currentProject,
   ...createForms({
     // Initial state will be provided upon receiving a project object
-    project: {}
+    project: {},
+    newProject: {}
   })
 })
