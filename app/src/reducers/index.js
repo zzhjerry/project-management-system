@@ -27,6 +27,9 @@ const loginError = (state=null, actions) => {
   switch (actions.type) {
     case RECEIVE_LOGIN_ERROR:
       return actions.error
+    case RECEIVE_LOGOUT:
+    case RECEIVE_USER:
+      return null
     default:
       return state
   }

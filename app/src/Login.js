@@ -5,7 +5,7 @@ import { loginAsync } from './actions'
 
 /* components */
 import { Form, Control, actions } from 'react-redux-form'
-import { Button, FormGroup, Label, Input } from 'reactstrap'
+import { Button, FormGroup, Label, Input, Alert } from 'reactstrap'
 
 const AuthForm = ({ model, onSubmit, submitText='Submit' }) => (
   <Form model={model} style={styles.form} onSubmit={onSubmit}>
@@ -34,8 +34,11 @@ class Login extends React.Component {
     }
 
     return (
-      <div style={styles.container}>
+      <div className="container" style={styles.container}>
         <h4>Welcome, Please Login</h4>
+        {this.props.loginError ? (
+          <Alert color="danger">{this.props.loginError}</Alert>
+        ): (<p></p>)}
         <AuthForm
           model="loginForm" submitText="Login"
           onSubmit={this.handleSubmit}>
@@ -78,6 +81,7 @@ const styles = {
 }
 
 const mapStateToProps = state => ({
+  loginError: state.loginError,
   user: state.user,
   loginForm: state.loginForm
 })

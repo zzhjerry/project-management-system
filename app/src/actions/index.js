@@ -78,9 +78,16 @@ export const signupAsync = (email, password, cb) => (dispatch) => {
 }
 
 export const loginAsync = (email, password) => (dispatch) => {
+  dispatch(actions.setPending('loginForm', true))
   return superagent.post('/api/auth/login').send({ email, password })
-    .then(res => dispatch(receiveUser(res.body)))
-    .catch(error => dispatch(receiveLoginError(error)))
+    .then(res =>{
+      dispatch(actions.setSubmitted('loginForm', true))
+      dispatch(receiveUser(res.body))
+    })
+    .catch(error => {
+      dispatch(actions.setSubmitFailed('loginForm'))
+      dispatch(receiveLoginError(error.message))
+    })
 }
 
 export const logoutAsync = (cb) => (dispatch) => {
