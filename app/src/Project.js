@@ -152,12 +152,13 @@ const ProjectStatus = (props) => {
         return 'danger'
     }
   }
+  const date = new Date(props.createdAt)
   return (
     <div className="my-2 d-flex align-items-center">
       <Badge disabled color={color(props.status)}>
         {props.status}
       </Badge>
-      <small className="ml-2">Created at: {props.createdAt}</small>
+      <small className="ml-2">Created at: {date.toLocaleString()}</small>
     </div>
   )
 }
