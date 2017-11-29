@@ -11,6 +11,7 @@ import Header from './Header'
 import { Login, Signup } from './Auth'
 import Dashboard from './Dashboard'
 import { ProjectDetail, ProjectNew } from './Project'
+import Loading from './Loading'
 
 class App extends React.Component {
   componentDidMount() {
@@ -18,6 +19,9 @@ class App extends React.Component {
   }
 
   render() {
+    if (this.props.isFetching) {
+      return <Loading/>
+    }
     return (
       <Router>
         <div>
@@ -33,4 +37,4 @@ class App extends React.Component {
   }
 }
 
-export default connect()(App)
+export default connect((state) => ({ isFetching: state.user.isFetching }))(App)

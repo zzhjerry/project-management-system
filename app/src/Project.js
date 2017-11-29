@@ -12,11 +12,12 @@ import {
   TabContent, TabPane, ListGroup, ListGroupItem,
   Input
 } from 'reactstrap'
+import Loading from './Loading'
 
 class ProjectDetail extends React.Component {
   render() {
     if (this.props.isFetching) {
-      return <h1>Loading</h1>
+      return <Loading/>
     }
 
     const { title, status, createdAt, description, slug, experts } = this.props.project

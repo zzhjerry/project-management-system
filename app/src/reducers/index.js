@@ -48,7 +48,7 @@ const user = (state={
     case RECEIVE_USER_ERROR:
       return { ...state, isFetching: false, error: actions.error, data: {} }
     case RECEIVE_LOGOUT:
-      return { ...state, ifFetching: false, error: {}, data: {} }
+      return { ...state, isFetching: false, error: {}, data: {} }
     default:
       return state
   }
@@ -78,7 +78,6 @@ const currentProject = (state={
     case REQUEST_PROJECT:
       return { ...state, isFetching: true }
     case RECEIVE_PROJECT:
-      console.log('run')
       return { isFetching: false, error: null, data: actions.data }
     case RECEIVE_PROJECT_ERROR:
       return { ...state, isFetching: false, error: actions.error }
