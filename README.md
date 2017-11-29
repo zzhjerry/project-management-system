@@ -15,14 +15,15 @@ cd project-management-system
 
 # In the 1st terminal: install server dependencies
 npm install
-## then start dev server (port: 9000)
-npm run dev
 
 # In the 2nd terminal: start database
 ## only need to make dir once. .db is gitignored
 mkdir .db
 ## start database
 mongod --dbpath=.db
+
+## In the 1st terminal: then start dev server (port: 9000)
+npm run dev
 
 # In the 3nd terminal: install frontend dependencies
 cd app

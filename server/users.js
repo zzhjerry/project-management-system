@@ -17,8 +17,11 @@ router.post('/', function (req, res, next) {
     var message = _.mapValues(_.pick(errors, ['email.message', 'password.message']), getMessage)
     return res.json({ message: message })
   }
-  return user.save().then(function () {
-    return res.json({ email: user.email })
+  return user.save().then(function (user) {
+    req.login(user, function (err) {
+      if (err) { return next(err) }
+      return res.json({ email: user.email })
+    })
   }).catch(function (err) {
     if (err.code === 11000) {
       // error when creating duplicate accounts
