@@ -23,13 +23,15 @@ const Header = (props) => {
           </Button>
         </div>
       ) : (
-        <SignupOrLogin></SignupOrLogin>
+        <SignupOrLogin history={history}></SignupOrLogin>
       )}
     </header>
   )
 }
 
-const SignupOrLogin = withRouter(({ location }) => {
+// need to put withRouter outside of conenct for this component to
+// rerender when location changes
+const SignupOrLogin = withRouter(connect()(({ location }) => {
   const pathname = location.pathname
   if (pathname === '/') {
     return (
@@ -48,7 +50,7 @@ const SignupOrLogin = withRouter(({ location }) => {
       </NavLink>
     )
   }
-})
+}))
 
 const styles = {
   container: {
@@ -81,4 +83,4 @@ const mapStateToProps = state => ({
   email: state.user.data && state.user.data.email
 })
 
-export default connect(mapStateToProps)(withRouter(Header))
+export default withRouter(connect(mapStateToProps)(Header))

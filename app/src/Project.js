@@ -9,7 +9,9 @@ import md from 'markdown-it'
 import { track, actions, Form, Control } from 'react-redux-form'
 import {
   Button, Badge, Nav, NavItem, NavLink,
-  TabContent, TabPane, ListGroup, ListGroupItem } from 'reactstrap'
+  TabContent, TabPane, ListGroup, ListGroupItem,
+  Input
+} from 'reactstrap'
 
 class ProjectDetail extends React.Component {
   render() {
@@ -39,7 +41,7 @@ class ProjectNew extends React.Component {
     return (
       <div className="w-75 m-auto p-5">
         <Form className="w-75" model="newProject" onSubmit={this.handleSubmit}>
-          <Control.text model=".title" className="my-3 w-50" placeholder="Title"></Control.text>
+          <Control.text model=".title" component={Input} className="my-3 w-50" placeholder="Title"></Control.text>
           <MarkdownEditAndPreview
             model=".description"
             text={this.props.project.description}>
