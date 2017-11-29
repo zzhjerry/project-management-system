@@ -144,34 +144,6 @@ describe('Projects', function () {
         })
     })
 
-    it('should approve expert', function () {
-      return factory.createProjectWithExperts$Q().then(function (record) {
-        const doc = record._doc
-        assert.equal(doc.experts[2].status, 'rejected')
-        doc.experts[2].status = 'approved'
-        return supertest(app).put(endpoint).send(doc)
-          .expect(200)
-          .expect(function (res) {
-            assert.isObject(res.body)
-            assert.equal(res.body.experts[2].status, 'approved')
-          })
-      })
-    })
-
-    it('should reject expert', function () {
-      return factory.createProjectWithExperts$Q().then(function (record) {
-        const doc = record._doc
-        assert.equal(doc.experts[1].status, 'approved')
-        doc.experts[1].status = 'rejected'
-        return supertest(app).put(endpoint).send(doc)
-          .expect(200)
-          .expect(function (res) {
-            assert.isObject(res.body)
-            assert.equal(res.body.experts[1].status, 'rejected')
-          })
-      })
-    })
-
     it('should keep value of fields that are not provided in post body', function () {
       const originalDescription = body.description
       assert.ok(originalDescription)

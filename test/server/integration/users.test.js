@@ -52,14 +52,22 @@ describe('Users', function () {
       user.password = 'short'
       return supertest(app).post('/api/users')
         .send(user)
-        .expect(400, { message: 'password should be at least 8 characters long' })
+        .expect(400, {
+          message: {
+            password: 'password should be at least 8 characters long'
+          }
+        })
     })
 
     it('should respond 400 with validation error on invalid password', function () {
       user.password = '12345@$@'
       return supertest(app).post('/api/users')
         .send(user)
-        .expect(400, { message: 'password should only contain letters and numbers' })
+        .expect(400, {
+          message: {
+            password: 'password should only contain letters and numbers'
+          }
+        })
     })
 
     it('should respond 400 with error message on creating duplicate user', function () {
