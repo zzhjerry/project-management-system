@@ -8,8 +8,7 @@ import { getUserAsync } from './actions'
 
 /* components */
 import Header from './Header'
-import Login from './Login'
-import Signup from './Signup'
+import { Login, Signup } from './Auth'
 import Dashboard from './Dashboard'
 import { ProjectDetail, ProjectNew } from './Project'
 

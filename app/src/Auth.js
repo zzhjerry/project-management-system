@@ -1,7 +1,7 @@
 import React from 'react'
 import { withRouter, Redirect } from 'react-router'
 import { connect } from 'react-redux'
-import { loginAsync } from './actions'
+import { loginAsync, signupAsync } from './actions'
 
 /* components */
 import { Form, Control, actions } from 'react-redux-form'
@@ -36,14 +36,9 @@ class Login extends React.Component {
     return (
       <div className="container" style={styles.container}>
         <h4>Welcome, Please Login</h4>
-        {this.props.loginError ? (
-          <Alert color="danger">{this.props.loginError}</Alert>
-        ): (<p></p>)}
-        <AuthForm
-          model="loginForm" submitText="Login"
-          onSubmit={this.handleSubmit}>
-        </AuthForm>
-      </div>
+        {this.props.loginError ? (<Alert color="danger">{this.props.loginError}</Alert>): (<p></p>)}
+        <AuthForm model="loginForm" submitText="Login" onSubmit={this.handleSubmit}></AuthForm>
+        </div>
     )
   }
 
@@ -67,6 +62,42 @@ class Login extends React.Component {
 
 }
 
+class Signup extends React.Component {
+  render() {
+    if (this.props.user.data.email) {
+      return <Redirect to="/dashboard"/>
+    }
+
+    return (
+      <div style={styles.container}>
+        <h4>Let's Sign Up</h4>
+        <AuthForm
+          model="signupForm" submitText="Sign Up"
+          onSubmit={this.handleSubmit}>
+        </AuthForm>
+      </div>
+    )
+  }
+
+  constructor(props) {
+    super(props)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  handleSubmit(credentials) {
+    const { email, password } = credentials
+    this.props.dispatch(signupAsync(email, password))
+  }
+
+  componentWillMount() {
+    // QUESTION: load initial status here or in reducer?
+    this.props.dispatch(actions.load('signupForm', {
+      email: '',
+      password: ''
+    }))
+  }
+}
+
 const styles = {
   container: {
     marginTop: '50px',
@@ -80,10 +111,17 @@ const styles = {
   }
 }
 
-const mapStateToProps = state => ({
+
+const ConnectedLogin = connect((state) => ({
   loginError: state.loginError,
   user: state.user,
   loginForm: state.loginForm
-})
+}))(withRouter(Login))
 
-export default connect(mapStateToProps)(withRouter(Login))
+const ConnectedSignup = connect((state) => ({
+  signupError: state.signupError,
+  user: state.user,
+  signupForm: state.signupForm
+}))(Signup)
+
+export { ConnectedLogin as Login, ConnectedSignup as Signup }

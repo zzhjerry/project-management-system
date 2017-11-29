@@ -18,7 +18,7 @@ const Header = (props) => {
       {props.email ? (
         <div style={styles.alignRight}>
           <span style={styles.email}>Welcome: {props.email}</span>
-          <Button outline color="danger" size="sm" onClick={logout}>
+          <Button color="danger" size="sm" onClick={logout}>
             Logout
           </Button>
         </div>
@@ -36,7 +36,7 @@ const SignupOrLogin = withRouter(connect()(({ location }) => {
   if (pathname === '/') {
     return (
       <NavLink to="/signup" style={styles.alignRight}>
-        <Button outline color="success">
+        <Button color="success">
           Sign Up
         </Button>
       </NavLink>
@@ -44,7 +44,7 @@ const SignupOrLogin = withRouter(connect()(({ location }) => {
   } else {
     return (
       <NavLink to="/" style={styles.alignRight}>
-        <Button outline color="success">
+        <Button color="success">
           Login
         </Button>
       </NavLink>
