@@ -63,12 +63,15 @@ class Project extends React.Component {
     const approvedExperts = this.props.project.experts.filter((record, index) => (
       record.status === 'approved'
     ))
+    const date = new Date(this.props.project.createdAt)
+
     return (
       <div>
         <div className="d-flex align-items-center">
           <NavLink to={`/projects/${this.props.project.slug}`} className='mr-auto'>
             {this.props.project.title}
           </NavLink>
+          <div className="mr-5 font-italic">created at: {date.toLocaleDateString().replace(/\//g, ' ')}</div>
           <Button onClick={this.toggle} size="sm" color="info">{approvedExperts.length} Experts Approved</Button>
         </div>
         <Collapse isOpen={this.state.collapse}>
