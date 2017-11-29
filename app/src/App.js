@@ -11,7 +11,7 @@ import Header from './Header'
 import Login from './Login'
 import Signup from './Signup'
 import Dashboard from './Dashboard'
-import ProjectDetail from './ProjectDetail'
+import { ProjectDetail, ProjectNew } from './Project'
 
 class App extends React.Component {
   componentDidMount() {
@@ -26,6 +26,7 @@ class App extends React.Component {
           <Route exact path="/" component={Login}/>
           <Route exact path="/signup" component={Signup}/>
           <Route exact path="/dashboard" component={Dashboard}/>
+          <Route path="/new-project" component={ProjectNew}/>
           <Route path="/projects/:slug" component={ProjectDetail}/>
         </div>
       </Router>

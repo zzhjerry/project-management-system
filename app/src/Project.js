@@ -33,6 +33,16 @@ class ProjectDetail extends React.Component {
   }
 }
 
+class ProjectNew extends React.Component {
+  render() {
+    return (
+      <div className="w-75 m-auto p-5">
+        <h1>Hi</h1>
+      </div>
+    )
+  }
+}
+
 class ProjectHeader extends React.Component {
   render() {
     if (this.state.editable) {
@@ -312,4 +322,9 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(ProjectDetail)
+const ConnectedProjectDetail = connect(mapStateToProps)(ProjectDetail)
+const ConnectedProjectNew = connect()(ProjectNew)
+export {
+  ConnectedProjectDetail as ProjectDetail,
+  ConnectedProjectNew as ProjectNew
+}
