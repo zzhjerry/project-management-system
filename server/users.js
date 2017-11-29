@@ -9,11 +9,13 @@ router.post('/', function (req, res, next) {
   const credentials = _.pick(req.body, ['email', 'password'])
   const user = new User(credentials)
   const error = user.validateSync()
-  const invalidPasswordError = _.get(error, 'errors.password')
-  if (invalidPasswordError) {
+  const errors = _.get(error, 'errors')
+  if (errors) {
     // error when password is invalid
     res.status(400)
-    return res.json({ message: invalidPasswordError.message })
+    var getMessage = function (o) { return o.message }
+    var message = _.mapValues(_.pick(errors, ['email.message', 'password.message']), getMessage)
+    return res.json({ message: message })
   }
   return user.save().then(function () {
     return res.json({ email: user.email })
@@ -24,7 +26,7 @@ router.post('/', function (req, res, next) {
       return res.json({ message: 'email account already existed' })
     }
     // pass other errors to error handler
-    throw err
+    next(err)
   })
 })
 

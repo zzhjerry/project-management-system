@@ -4,28 +4,8 @@ import { connect } from 'react-redux'
 import { loginAsync, signupAsync } from './actions'
 
 /* components */
-import { Form, Control, actions } from 'react-redux-form'
+import { Form, Control, Errors, actions } from 'react-redux-form'
 import { Button, FormGroup, Label, Input, Alert } from 'reactstrap'
-
-const AuthForm = ({ model, onSubmit, submitText='Submit' }) => (
-  <Form model={model} style={styles.form} onSubmit={onSubmit}>
-    <FormGroup>
-      <Label for="email">Email</Label>
-      <Control
-        model=".email" component={Input}
-        placeholder="Please input your emails address" >
-      </Control>
-    </FormGroup>
-    <FormGroup>
-      <Label for="password">Password</Label>
-      <Control
-        model=".password" type="password" component={Input}
-        id="password" placeholder="Please input your password" >
-      </Control>
-    </FormGroup>
-    <Button color="primary" outline block size="sm">{submitText}</Button>
-  </Form>
-)
 
 class Login extends React.Component {
   render() {
@@ -67,10 +47,11 @@ class Signup extends React.Component {
     if (this.props.user.data.email) {
       return <Redirect to="/dashboard"/>
     }
-
+    const { signupError } = this.props
     return (
       <div style={styles.container}>
         <h4>Let's Sign Up</h4>
+        {signupError ? (<Alert color="danger">{signupError}</Alert>): (<p></p>)}
         <AuthForm
           model="signupForm" submitText="Sign Up"
           onSubmit={this.handleSubmit}>
@@ -97,6 +78,26 @@ class Signup extends React.Component {
     }))
   }
 }
+
+const AuthForm = ({ model, onSubmit, submitText='Submit' }) => (
+  <Form model={model} style={styles.form} onSubmit={onSubmit}>
+    <FormGroup>
+      <Label for="email">Email</Label>
+      <Control
+        model=".email" component={Input}
+        placeholder="Please input your emails address" >
+      </Control>
+    </FormGroup>
+    <FormGroup>
+      <Label for="password">Password</Label>
+      <Control
+        model=".password" type="password" component={Input}
+        id="password" placeholder="Please input your password" >
+      </Control>
+    </FormGroup>
+    <Button color="primary" outline block size="sm">{submitText}</Button>
+  </Form>
+)
 
 const styles = {
   container: {
