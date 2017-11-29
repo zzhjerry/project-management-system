@@ -2,7 +2,7 @@ module.exports = function (passport) {
   const router = require('express').Router()
 
   router.post('/login', function (req, res, next) {
-    passport.authenticate('local', function (err, user, info) {
+    passport.authenticate('local', { session: false }, function (err, user, info) {
       if (err) { return next(err) }
       if (!user) {
         res.status(401)
