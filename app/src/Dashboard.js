@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getProjectsAsync } from './actions'
 
@@ -20,6 +20,10 @@ class Dashboard extends React.Component {
       const projectCreatitionDate = new Date(project.createdAt)
       return project.status === 'pending' && projectCreatitionDate < threeDaysAgo
     })
+
+    if (!this.props.user.data.email) {
+        return <Redirect to="/"/>
+    }
 
     return (
       <div style={styles.container}>
@@ -104,6 +108,7 @@ const styles = {
 }
 
 const mapStateToProps = state => ({
+  user: state.user,
   isFetching: state.projects.isFetching,
   projects: state.projects.data || []
 })

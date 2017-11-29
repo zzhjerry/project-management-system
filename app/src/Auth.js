@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { loginAsync, signupAsync } from './actions'
 
 /* components */
-import { Form, Control, Errors, actions } from 'react-redux-form'
+import { Form, Control, actions } from 'react-redux-form'
 import { Button, FormGroup, Label, Input, Alert } from 'reactstrap'
 
 class Login extends React.Component {
@@ -49,7 +49,7 @@ class Signup extends React.Component {
     }
     const { signupError } = this.props
     return (
-      <div style={styles.container}>
+      <div className="container" style={styles.container}>
         <h4>Let's Sign Up</h4>
         {signupError ? (<Alert color="danger">{signupError}</Alert>): (<p></p>)}
         <AuthForm

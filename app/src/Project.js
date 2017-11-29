@@ -1,7 +1,7 @@
 import React from 'react'
 import superagent from 'superagent'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import { withRouter, Redirect } from 'react-router'
 import { getProjectAsync } from './actions'
 import md from 'markdown-it'
 
@@ -38,6 +38,10 @@ class ProjectDetail extends React.Component {
 
 class ProjectNew extends React.Component {
   render() {
+    if (!this.props.user.data.email) {
+      return <Redirect to="/"/>
+    }
+
     return (
       <div className="w-75 m-auto p-5">
         <Form className="w-75" model="newProject" onSubmit={this.handleSubmit}>
@@ -374,7 +378,11 @@ const mapStateToProps = state => {
 }
 
 const ConnectedProjectDetail = connect(mapStateToProps)(ProjectDetail)
-const ConnectedProjectNew = connect((state) => ({ project: state.newProject}))(withRouter(ProjectNew))
+const ConnectedProjectNew = connect((state) => ({
+  user: state.user,
+  project: state.newProject
+}))(withRouter(ProjectNew))
+
 export {
   ConnectedProjectDetail as ProjectDetail,
   ConnectedProjectNew as ProjectNew
