@@ -9,16 +9,22 @@ const factory = require('./server/integration/factory.js')
 const _ = require('lodash')
 const Q = require('bluebird')
 
-const status = _.concat(_.fill(Array(3), 'new'), _.fill(Array(6), 'pending'))
-const projects = _.map(status, function (value, index) {
-  return {
-    status: value
+const status = _.concat(_.fill(Array(3), 'new'), _.fill(Array(9), 'pending'))
+var threeDaysInMilliseconds = 3 * 24 * 60 * 60 * 1000
+var threeDaysAgo = new Date(new Date().getTime() - threeDaysInMilliseconds)
+
+const overrides = _.map(status, function (value, index) {
+  var override = { status: value }
+  if (index >= status.length - 3) {
+    // create expired projects
+    _.merge(override, { createdAt: threeDaysAgo })
   }
+  return override
 })
 
-const createProjects$Q = _.map(projects, function (project) {
-  return factory.createProjectWithExperts$Q(project).then(function (record) {
-    console.log('Created project ', record.title, 'with status ', record.status)
+const createProjects$Q = _.map(overrides, function (override) {
+  return factory.createProjectWithExperts$Q(override).then(function (record) {
+    console.log('Created project ', record.title, 'with status ', record.status, '. Created at: ', record.createdAt)
   }).catch(console.log)
 })
 

@@ -34,7 +34,7 @@ factory.createProjectWithExperts$Q = function (override) {
     const projectExperts = _.zipWith(expertStatus, experts, function (status, expert) {
       return { expert: expert.id, status: status }
     })
-    override = _.pick(override, ['title', 'description', 'status'])
+    override = _.pick(override, ['title', 'description', 'status', 'createdAt'])
     const data = _.merge({}, override, { experts: projectExperts })
     return factory.create('project', data)
   })
