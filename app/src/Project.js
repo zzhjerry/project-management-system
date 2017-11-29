@@ -92,10 +92,11 @@ class ProjectHeader extends React.Component {
         </Form>
       )
     }
+
     return (
       <header className="d-flex align-items-center">
         <h1 className="mr-auto">{this.props.title}</h1>
-        <Button className="h-100" color="primary" onClick={this.toggleEditable}>Edit</Button>
+        {this.props.user.data.email && <Button className="h-100" color="primary" onClick={this.toggleEditable}>Edit</Button>}
       </header>
     )
   }
@@ -137,7 +138,7 @@ class ProjectHeader extends React.Component {
   }
 }
 
-const ConnectedProjectHeader = connect()(ProjectHeader)
+const ConnectedProjectHeader = connect((state) => ({ user: state.user }))(ProjectHeader)
 
 const ProjectStatus = (props) => {
   const color = (status) => {
@@ -173,10 +174,10 @@ class Description extends React.Component {
       )
     }
     return (
-      <DescriptionDisplay
+      <ConnectedDescriptionDisplay
         text={description}
         onEditButtonClick={this.toggleEditable}>
-      </DescriptionDisplay>
+      </ConnectedDescriptionDisplay>
     )
   }
 
@@ -215,13 +216,16 @@ class Expert extends React.Component {
   render() {
     const { expert={}, status='' } = this.props.expert
     const approved = status === 'approved'
+    const button = (
+      <Button onClick={this.changeStatus} color={approved ? 'danger' : 'success' } size="sm">
+        {approved ? 'Reject' : 'Approve' }
+      </Button>
+    )
     return (
       <div className="d-flex align-items-center">
         <div>{`${expert.firstname} ${expert.lastname}`}</div>
         <Badge color={approved ? 'success' : 'danger'} className="ml-2 mr-auto">{status}</Badge>
-        <Button onClick={this.changeStatus} color={approved ? 'danger' : 'success' } size="sm">
-          {approved ? 'Reject' : 'Approve' }
-        </Button>
+        {this.props.user.data.email && button}
       </div>
     )
   }
@@ -251,7 +255,7 @@ class Expert extends React.Component {
   }
 }
 
-const ConnectedExpert = connect()(Expert)
+const ConnectedExpert = connect((state) => ({ user: state.user }))(Expert)
 
 class DescriptionEditAndPreview extends React.Component {
   constructor(props) {
@@ -299,19 +303,24 @@ const ConnectedDescriptionEditAndPreview = connect()(DescriptionEditAndPreview)
 
 const DescriptionDisplay = (props) => {
   const { onEditButtonClick } = props
+  const bottom = (
+    <div className="d-flex justify-content-between align-items-center" style={{ fontSize: '12px' }}>
+      <span className="font-italic">Markdown is supported</span>
+      <Button className="h-50" color="none" size="sm" onClick={onEditButtonClick}>
+        <i className="fa fa-pencil mr-1"></i>
+        Edit
+      </Button>
+    </div>
+  )
   return (
     <div className="my-4 p-3 border border-left-0 border-right-0 w-75">
       <MarkdownDisplay text={props.text}/>
-      <div className="d-flex justify-content-between align-items-center" style={{ fontSize: '12px' }}>
-        <span className="font-italic">Markdown is supported</span>
-        <Button className="h-50" color="none" size="sm" onClick={onEditButtonClick}>
-          <i className="fa fa-pencil mr-1"></i>
-          Edit
-        </Button>
-      </div>
+      {props.user.data.email && bottom}
     </div>
   )
 }
+
+const ConnectedDescriptionDisplay = connect((state) => ({ user: state.user }))(DescriptionDisplay)
 
 class MarkdownEditAndPreview extends React.Component {
   render() {
@@ -371,13 +380,11 @@ const MarkdownDisplay = (props) => {
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    project: state.project,
-  }
-}
+const ConnectedProjectDetail = connect((state) => ({
+  user: state.user,
+  project: state.project
+}))(ProjectDetail)
 
-const ConnectedProjectDetail = connect(mapStateToProps)(ProjectDetail)
 const ConnectedProjectNew = connect((state) => ({
   user: state.user,
   project: state.newProject
