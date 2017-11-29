@@ -36,15 +36,7 @@ Approve / Reject experts.
 
 **Other routes and request methods to `/api/*` not listed above will return 404**
 
-## Dev Notes
-
-### Prerequisites
-
-Assume you have following softwares installed, if not, see link behind for instruction
-
-- MongoDB ([install](https://docs.mongodb.com/manual/administration/install-community/)): `mongod` is needed to start `development` and `testing` database
-
-### Choice of libraries
+#### Choice of libraries
 
 - Util: [lodash](https://lodash.com/docs/4.17.4)
 - Promise: [bluebird](http://bluebirdjs.com/docs/getting-started.html)
@@ -52,6 +44,60 @@ Assume you have following softwares installed, if not, see link behind for instr
 - Test framework: [mocha](https://mochajs.org/))
 - API Integration test: [supertest](https://github.com/visionmedia/supertest)
 - Assertion Library: [chai/assert](http://chaijs.com/api/assert/)
+
+
+### Frontend (`/app`)
+
+#### Routes:
+
+**`/`**:
+
+- login or go to `/signup`
+- redirect user to `/dashboard` if a user is already logged in or after logging in
+
+**`/signup`**:
+
+- signup or go to `/` (login)
+- redirect user to `/dashboard` after a user sign up
+
+**`/dashboard`**
+
+- display a list of projects with `new`, `pending` and creation time
+- display `approved` experts by toggling button
+- if user is not authenticated, redirect them to `/` (login)
+
+**`/projects/:slug`**
+
+- display a project's detail
+- if a user is logged in, allow them to edit project's `title`, `description`, approve/reject `experts`
+- if a user is NOT logged in, only display `title`, `description`, `experts`
+
+**`/new-project`**
+
+- allow authenticated user to create a new project
+- redirect anonymouse user to `/` (login)
+
+#### Choice of libraries
+
+- Framework: [React](https://reactjs.org/)
+- Frontend Routing: [React-Router](https://reacttraining.com/react-router/web/example/basic)
+- State Management: [Redux](https://redux.js.org/docs/advanced/UsageWithReactRouter.html)
+- Async Action Creator: [Redux Thunk Middleware](https://github.com/gaearon/redux-thunk)
+- CSS Components: [Reactstrap](https://reactstrap.github.io/)
+- CSS Framework: [Bootstrap@4](https://getbootstrap.com/) and [Font Awesome](http://fontawesome.io/icons/)
+- Ajax Library: [superagent](http://visionmedia.github.io/superagent/)
+- Form Management: [react-redux-form](https://davidkpiano.github.io/react-redux-form/)
+- Structure setup: [create-react-app](https://github.com/facebookincubator/create-react-app)
+- Markdown Generation: [markdown-it](https://github.com/markdown-it/markdown-it)
+- Loading Icon: [react-loading](https://github.com/fakiolinho/react-loading)
+
+## Dev Notes
+
+### Prerequisites
+
+Assume you have following softwares installed, if not, see link behind for instruction
+
+- MongoDB ([install](https://docs.mongodb.com/manual/administration/install-community/)): `mongod` is needed to start `development` and `testing` database
 
 ### Data Models
 
@@ -106,14 +152,12 @@ various other authentication needs.
 
 ## TODOS
 
-[ ] Project Detail View
-[ ] Approve / Reject expert on project detail view
-[ ] Don't show approve, reject / edit button for anonymouse user
-[ ] New Project form and Project Edit form
-[ ] Redirect anonymouse user from /dashboard to /, automatically redirect them back after login
-[ ] Add spinner
-[ ] Form Error handling
-[ ] Codeceptjs e2e test
+- [ ] Protect api endpoints with necessary authorization
+- [ ] Project Form Error handling
+- [ ] Codeceptjs e2e test
+- [ ] Add experts to project
+- [ ] Mobile support
+- [ ] Add a button that change `new` projects to `pending`?
 
 ## Change log
 
