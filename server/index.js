@@ -3,7 +3,14 @@ const express = require('express')
 const app = express()
 app.use(require('cookie-parser')())
 app.use(require('body-parser').json())
-app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }))
+app.use(require('express-session')({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 2 * 14 * 24 * 60 * 60 * 1000 // expires in 2 weeks
+  }
+}))
 const passport = require('./passport.js')
 // we initialize both passport and auth router in here
 app.use(passport.initialize())
