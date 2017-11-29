@@ -202,6 +202,8 @@ various other authentication needs.
 
 ## Change log
 
+#### v0.3.1 - 20171129 (@jerry)
+* FIX: test fixture and build documentation
 #### v0.3.0 - 20171129 (@jerry)
 * ADD: required frontend logic working correctly
 #### v0.2.0 - 20171126 (@jerry)
