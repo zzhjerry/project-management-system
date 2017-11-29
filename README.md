@@ -1,5 +1,51 @@
 # Project Management System
 
+## Run
+
+### Prerequisites
+
+Assume you have following softwares installed. If not, check the link behind.
+
+- node@v7.5.0 ([install](https://nodejs.org/en/))
+- MongoDB ([install](https://docs.mongodb.com/manual/administration/install-community/)): `mongod` is needed to start `development` and `testing` database
+
+``` shell
+git clone git@github.com:zzhjerry/project-management-system.git
+cd project-management-system
+
+# In the 1st terminal: install server dependencies
+npm install
+## then start dev server (port: 9000)
+npm run dev
+
+# In the 2nd terminal: start database
+## only need to make dir once. .db is gitignored
+mkdir .db
+## start database
+mongod --dbpath=.db
+
+# In the 3nd terminal: install frontend dependencies
+cd app
+npm install
+## then start dev server on port: 3000. API calls are proxied to 9000, so we can use this in dev
+npm start
+## above command will open http://localhost:3000 with login page
+## To visit the project on :9000 you need to run the following command
+npm run build
+
+# In the 4th terminal: generate some fixture data
+npm run dev:fixture-gen
+```
+
+## Test
+
+``` shell
+# run backend test (assume you are in the project root folder)
+npm test
+# debug backend test
+npm run test:debug
+```
+
 ## Architecture
 
 ### Backend (`/server`)
@@ -92,12 +138,6 @@ Approve / Reject experts.
 - Loading Icon: [react-loading](https://github.com/fakiolinho/react-loading)
 
 ## Dev Notes
-
-### Prerequisites
-
-Assume you have following softwares installed, if not, see link behind for instruction
-
-- MongoDB ([install](https://docs.mongodb.com/manual/administration/install-community/)): `mongod` is needed to start `development` and `testing` database
 
 ### Data Models
 

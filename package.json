@@ -4,8 +4,9 @@
   "description": "A Project Management System",
   "main": "server/index.js",
   "scripts": {
+    "start": "node server/index.js",
     "dev": "nodemon server/index.js",
-    "test:db": "[ -d .db ] || mkdir .db && mongod --dbpath=.db",
+    "dev:fixture-gen": "NODE_ENV=development node test/fixture-gen.js",
     "test": "NODE_ENV=test mocha test/**/*.test.js --exit",
     "test:debug": "NODE_ENV=test mocha debug test/**/*.test.js --exit"
   },
