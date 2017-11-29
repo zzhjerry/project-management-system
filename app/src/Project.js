@@ -87,7 +87,7 @@ class ProjectHeader extends React.Component {
     if (this.state.editable) {
       return (
         <Form model="project.title" className="d-flex" onSubmit={this.handleSubmit}>
-          <Control.text model="project.title" className="mr-auto w-50" placeholder="Title"></Control.text>
+          <Control.text component={Input} model="project.title" className="mr-auto w-50" placeholder="Title"></Control.text>
           <Button type="submit" className="mx-sm-1" color="success">Save</Button>
           <Button onClick={this.handleCancel} color="danger">Cancel</Button>
         </Form>
@@ -153,7 +153,7 @@ const ProjectStatus = (props) => {
     }
   }
   return (
-    <div className="mb-2 d-flex align-items-center">
+    <div className="my-2 d-flex align-items-center">
       <Badge disabled color={color(props.status)}>
         {props.status}
       </Badge>
