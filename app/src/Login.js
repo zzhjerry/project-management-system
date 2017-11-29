@@ -1,59 +1,65 @@
 import React from 'react'
-import { withRouter } from 'react-router'
+import { withRouter, Redirect } from 'react-router'
 import { connect } from 'react-redux'
 import { loginAsync } from './actions'
 
 /* components */
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap'
+import { Form, Control, actions } from 'react-redux-form'
+import { Button, FormGroup, Label, Input } from 'reactstrap'
+
+const AuthForm = ({ model, onSubmit, submitText='Submit' }) => (
+  <Form model={model} style={styles.form} onSubmit={onSubmit}>
+    <FormGroup>
+      <Label for="email">Email</Label>
+      <Control
+        model=".email" component={Input}
+        placeholder="Please input your emails address" >
+      </Control>
+    </FormGroup>
+    <FormGroup>
+      <Label for="password">Password</Label>
+      <Control
+        model=".password" type="password" component={Input}
+        id="password" placeholder="Please input your password" >
+      </Control>
+    </FormGroup>
+    <Button color="primary" outline block size="sm">{submitText}</Button>
+  </Form>
+)
 
 class Login extends React.Component {
   render() {
+    if (this.props.user.data.email) {
+      return <Redirect to="/dashboard"/>
+    }
+
     return (
       <div style={styles.container}>
         <h4>Welcome, Please Login</h4>
-        <Form style={styles.form} onSubmit={this.handleSubmit}>
-          <FormGroup>
-            <Label for="email">Email</Label>
-            <Input type="email" name="email" id="email" value={this.state.email}
-                   onChange={this.handleInputChange}
-                   placeholder="Please input your emails address" />
-          </FormGroup>
-          <FormGroup>
-            <Label for="password">Password</Label>
-            <Input minLength="8" type="password" name="password" value={this.state.password}
-                   onChange={this.handleInputChange}
-                   id="password" placeholder="Please input your password" />
-          </FormGroup>
-          <Button color="primary" outline block size="sm">Login</Button>
-        </Form>
+        <AuthForm
+          model="loginForm" submitText="Login"
+          onSubmit={this.handleSubmit}>
+        </AuthForm>
       </div>
     )
   }
 
   constructor(props) {
     super(props)
-    this.state = {
-      email: '',
-      password: ''
-    }
-    this.handleInputChange = this.handleInputChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  handleInputChange(event) {
-    const target = event.target
-
-    this.setState({
-      [target.name]: target.value
-    })
+  componentWillMount() {
+    // QUESTION: load initial status here or in reducer?
+    this.props.dispatch(actions.load('loginForm', {
+      email: '',
+      password: ''
+    }))
   }
 
-  handleSubmit(event) {
-    const [ email, password ] = [ this.state.email, this.state.password ]
-    const { history } = this.props
-    const onSuccess = () => history.push('/dashboard')
-    this.props.dispatch(loginAsync(email, password, onSuccess))
-    event.preventDefault()
+  handleSubmit({ email, password }) {
+    const { dispatch } = this.props
+    dispatch(actions.submit('loginForm', dispatch(loginAsync(email, password))))
   }
 
 }
@@ -70,4 +76,10 @@ const styles = {
     margin: '30px auto'
   }
 }
-export default connect()(withRouter(Login))
+
+const mapStateToProps = state => ({
+  user: state.user,
+  loginForm: state.loginForm
+})
+
+export default connect(mapStateToProps)(withRouter(Login))

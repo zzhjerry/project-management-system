@@ -3,6 +3,7 @@ import { createForms } from 'react-redux-form'
 import {
   REQUEST_USER,
   RECEIVE_USER,
+  RECEIVE_USER_ERROR,
   RECEIVE_LOGOUT,
   RECEIVE_LOGIN_ERROR,
   RECEIVE_SIGN_UP_ERROR,
@@ -33,15 +34,18 @@ const loginError = (state=null, actions) => {
 
 const user = (state={
   isFetching: false,
+  error: {},
   data: {}
 }, actions) => {
   switch (actions.type) {
     case REQUEST_USER:
       return { ...state, isFetching: true }
     case RECEIVE_USER:
-      return { ...state, isFetching: false, data: actions.data }
+      return { ...state, isFetching: false, error: {}, data: actions.data }
+    case RECEIVE_USER_ERROR:
+      return { ...state, isFetching: false, error: actions.error, data: {} }
     case RECEIVE_LOGOUT:
-      return { ...state, ifFetching: false, data: null }
+      return { ...state, ifFetching: false, error: {}, data: {} }
     default:
       return state
   }
@@ -89,6 +93,8 @@ export default combineReducers({
   ...createForms({
     // Initial state will be provided upon receiving a project object
     project: {},
-    newProject: {}
+    newProject: {},
+    loginForm: {},
+    signupForm: {}
   })
 })

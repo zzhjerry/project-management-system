@@ -5,6 +5,7 @@ export const RECEIVE_SIGN_UP_ERROR = 'RECEIVE_SIGN_UP_ERROR'
 export const RECEIVE_LOGIN_ERROR = 'RECEIVE_LOGIN_ERROR'
 export const REQUEST_USER = 'REQUEST_USER'
 export const RECEIVE_USER = 'RECEIVE_USER'
+export const RECEIVE_USER_ERROR = 'RECEIVE_USER_ERROR'
 export const REQUEST_PROJECTS = 'REQUEST_PROJECTS'
 export const RECEIVE_PROJECTS = 'RECEIVE_PROJECTS'
 export const RECEIVE_LOGOUT = 'RECEIVE_LOGOUT'
@@ -29,6 +30,11 @@ export const requestUser = () => ({
 export const receiveUser = (data) => ({
   type: RECEIVE_USER,
   data
+})
+
+export const receiveUserError = (error) => ({
+  type: RECEIVE_USER_ERROR,
+  error
 })
 
 export const requestProjects = () => ({
@@ -61,8 +67,8 @@ const receiveProjectError = (error) => ({
 export const getUserAsync = (cb) => (dispatch) => {
   return superagent.get('/api/users/current')
     .withCredentials()
-    .then(res => dispatch(receiveUser(res.body)))
-    .catch(cb)
+    .then(res => dispatch(receiveUser(res.body))).then(cb)
+    .catch(error => dispatch(receiveUserError(error)))
 }
 
 export const signupAsync = (email, password, cb) => (dispatch) => {
@@ -71,9 +77,9 @@ export const signupAsync = (email, password, cb) => (dispatch) => {
     .catch(error => dispatch(receiveSignupError(error)))
 }
 
-export const loginAsync = (email, password, cb) => (dispatch) => {
+export const loginAsync = (email, password) => (dispatch) => {
   return superagent.post('/api/auth/login').send({ email, password })
-    .then(res => dispatch(receiveUser(res.body))).then(cb)
+    .then(res => dispatch(receiveUser(res.body)))
     .catch(error => dispatch(receiveLoginError(error)))
 }
 
