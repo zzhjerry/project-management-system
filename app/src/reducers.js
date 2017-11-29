@@ -12,7 +12,7 @@ import {
   REQUEST_PROJECT,
   RECEIVE_PROJECT,
   RECEIVE_PROJECT_ERROR
-} from '../actions'
+} from './actions.js'
 
 const signupError = (state=null, actions) => {
   switch (actions.type) {
