@@ -11,11 +11,16 @@ router.post('/', function (req, res, next) {
   const error = user.validateSync()
   const errors = _.get(error, 'errors')
   if (errors) {
-    // error when password is invalid
+    // use mongoose's default validation error format, see here for details:
+    // http://mongoosejs.com/docs/validation.html
+    // Error is keyed by field name so frontend can map them to each input field
+    // see here: https://davidkpiano.github.io/react-redux-form/docs/guides/validation.html
+    // and read doc about submitFields function
+    var errorWithOnlyMessage = _.mapValues(errors, function (error) {
+      return error.message
+    })
     res.status(400)
-    var getMessage = function (o) { return o.message }
-    var message = _.mapValues(_.pick(errors, ['email.message', 'password.message']), getMessage)
-    return res.json({ message: message })
+    return res.json(errorWithOnlyMessage)
   }
   return user.save().then(function (user) {
     req.login(user, function (err) {
@@ -26,7 +31,7 @@ router.post('/', function (req, res, next) {
     if (err.code === 11000) {
       // error when creating duplicate accounts
       res.status(400)
-      return res.json({ message: 'email account already existed' })
+      return res.json({ message: 'This email account has been taken' })
     }
     // pass other errors to error handler
     next(err)

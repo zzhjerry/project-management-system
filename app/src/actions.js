@@ -54,24 +54,35 @@ export const getUserAsync = (cb) => (dispatch) => {
     .catch(error => dispatch(receiveUserError(error)))
 }
 
-export const signupAsync = (email, password, cb) => (dispatch) => {
-  return superagent.post('/api/users').send({ email, password })
-    .then(res => dispatch(receiveUser(res.body))).then(cb)
-    .catch(error => dispatch(receiveSignupError(error.response.text)))
+export const signupAsync = (email, password) => (dispatch) => {
+  dispatch(actions.resetValidity('signupForm'))
+  dispatch(actions.setPending('signupForm', true))
+  return superagent.post('/api/users')
+    .send({ email, password })
+    .then(res => dispatch(receiveUser(res.body)))
+    .catch(error => {
+      const { response: { body } } = error
+      // the throwed value will be set to signupForm.errors
+      throw body
+    })
 }
 
 export const loginAsync = (email, password) => (dispatch) => {
+  // reset the validation since some of them maybe stale after a second try
+  dispatch(actions.resetValidity('loginForm'))
   dispatch(actions.setPending('loginForm', true))
-  return superagent.post('/api/auth/login').send({ email, password })
+  return superagent.post('/api/auth/login')
+    .send({ email, password })
     .withCredentials()
-    .then(res =>{
-      dispatch(actions.setSubmitted('loginForm', true))
-      dispatch(receiveUser(res.body))
-    })
+    .then(res =>dispatch(receiveUser(res.body)))
     .catch(error => {
-      dispatch(actions.setSubmitFailed('loginForm'))
-      const { response: { body: { message='' } } } = error
-      dispatch(receiveLoginError(message))
+      // keys in the throwed error object will be set to error field of
+      // corresponding keys of model specified in actions.submit
+      // this will be catched by react-redux-form to set errors in
+      // individual fields
+      // Note that we mapped custom errors under the 'message' key
+      const { response: { body } } = error
+      throw body
     })
 }
 

@@ -9,13 +9,17 @@ passport.use(new LocalStrategy({
   User.findOne({ email: email }, function (err, user) {
     if (err) { return done(err) }
     if (!user) {
-      return done(null, false, { message: 'Incorrect email account.' })
+      return done(null, false, {
+        email: 'Email account doesn\'t exist'
+      })
     }
     return user.validPassword(password).then(function (res) {
       if (res) {
         return done(null, user)
       } else {
-        return done(null, false, { message: 'Incorrect password.' })
+        return done(null, false, {
+          password: 'Incorrect password.'
+        })
       }
     })
   })

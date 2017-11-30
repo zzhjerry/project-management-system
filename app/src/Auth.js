@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { loginAsync, signupAsync } from './actions'
 
 /* components */
-import { Form, Control, actions } from 'react-redux-form'
+import { Form, Control, Errors, actions } from 'react-redux-form'
 import { Button, FormGroup, Label, Input, Alert } from 'reactstrap'
 
 class Login extends React.Component {
@@ -37,7 +37,7 @@ class Login extends React.Component {
 
   handleSubmit({ email, password }) {
     const { dispatch } = this.props
-    dispatch(actions.submit('loginForm', dispatch(loginAsync(email, password))))
+    dispatch(actions.submitFields('loginForm', dispatch(loginAsync(email, password))))
   }
 
 }
@@ -65,9 +65,9 @@ class Signup extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  handleSubmit(credentials) {
-    const { email, password } = credentials
-    this.props.dispatch(signupAsync(email, password))
+  handleSubmit({ email, password }) {
+    const { dispatch } = this.props
+    dispatch(actions.submitFields('signupForm', dispatch(signupAsync(email, password))))
   }
 
   componentWillMount() {
@@ -81,12 +81,14 @@ class Signup extends React.Component {
 
 const AuthForm = ({ model, onSubmit, submitText='Submit' }) => (
   <Form model={model} style={styles.form} onSubmit={onSubmit}>
+    <Errors model=".message" className="text-danger" />
     <FormGroup>
       <Label htmlFor="email">Email</Label>
       <Control
         model=".email" component={Input}
         placeholder="Please input your emails address" >
       </Control>
+      <Errors model=".email" className="text-danger" />
     </FormGroup>
     <FormGroup>
       <Label htmlFor="password">Password</Label>
@@ -94,6 +96,7 @@ const AuthForm = ({ model, onSubmit, submitText='Submit' }) => (
         model=".password" type="password" component={Input}
         id="password" placeholder="Please input your password" >
       </Control>
+      <Errors model=".password" className="text-danger"/>
     </FormGroup>
     <Button color="primary" outline block size="sm">{submitText}</Button>
   </Form>

@@ -4,6 +4,7 @@ import { logoutAsync } from './actions'
 
 /* components */
 import { NavLink, withRouter } from 'react-router-dom'
+import { actions } from 'react-redux-form'
 import { Button } from 'reactstrap'
 import logo from './logo.png'
 
@@ -31,12 +32,17 @@ const Header = (props) => {
 
 // need to put withRouter outside of conenct for this component to
 // rerender when location changes
-const SignupOrLogin = withRouter(connect()(({ location }) => {
+const SignupOrLogin = withRouter(connect()(({ location, dispatch }) => {
   const pathname = location.pathname
+  const clearFormErrorMessage = () => {
+    dispatch(actions.resetValidity('loginForm'))
+    dispatch(actions.resetValidity('signupForm'))
+  }
+
   if (pathname === '/') {
     return (
       <NavLink to="/signup" style={styles.alignRight}>
-        <Button color="success">
+        <Button color="success" onClick={clearFormErrorMessage}>
           Sign Up
         </Button>
       </NavLink>
@@ -44,7 +50,7 @@ const SignupOrLogin = withRouter(connect()(({ location }) => {
   } else {
     return (
       <NavLink to="/" style={styles.alignRight}>
-        <Button color="success">
+        <Button color="success" onClick={clearFormErrorMessage}>
           Login
         </Button>
       </NavLink>

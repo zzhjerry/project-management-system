@@ -48,36 +48,51 @@ describe('Users', function () {
         .expect(200, { email: user.email })
     })
 
-    it('should respond 400 with validation error on short password', function () {
+    it('should respond 400 with error message when password is short', function () {
       user.password = 'short'
       return supertest(app).post('/api/users')
         .send(user)
-        .expect(400, {
-          message: {
-            password: 'password should be at least 8 characters long'
-          }
-        })
+        .expect(400, { password: 'password should be at least 8 characters long' })
     })
 
-    it('should respond 400 with validation error on invalid password', function () {
+    it('should respond 400 with error message when password has forbidden characters', function () {
       user.password = '12345@$@'
       return supertest(app).post('/api/users')
         .send(user)
+        .expect(400, { password: 'password should only contain letters and numbers' })
+    })
+
+    it('should respond 400 with error message when email is missing', function () {
+      user.email = ''
+      return supertest(app).post('/api/users')
+        .send(user)
+        .expect(400, { email: 'email is required' })
+    })
+
+    it('should respond 400 with error message when password is missing', function () {
+      user.password = ''
+      return supertest(app).post('/api/users').send(user)
+        .expect(400, { password: 'password is required' })
+    })
+
+    it('should respond 400 with error message when both password and email are missing', function () {
+      user.email = ''
+      user.password = ''
+      return supertest(app).post('/api/users').send(user)
         .expect(400, {
-          message: {
-            password: 'password should only contain letters and numbers'
-          }
+          email: 'email is required',
+          password: 'password is required'
         })
     })
 
-    it('should respond 400 with error message on creating duplicate user', function () {
+    it('should respond 400 with error message when email account is alredy taken ', function () {
       return factory.create('user').then(function () {
         // When the first model is saved, index may not exist. So we need to wait
         // for index to be created to test creating duplicate model
         return mongoose.model('User').ensureIndexes().then(function () {
           return supertest(app).post('/api/users')
             .send(user)
-            .expect(400, { message: 'email account already existed' })
+            .expect(400, { message: 'This email account has been taken' })
         })
       })
     })
@@ -88,7 +103,7 @@ describe('Users', function () {
       user.email = email
       return supertest(app).post('/api/users')
         .send(user)
-        .expect(400, { message: 'email address is not valid' })
+        .expect(400, { email: 'email address is not valid' })
     })
   })
 

@@ -46,18 +46,40 @@ describe('Auth / login', function () {
         .expect(200, { email: user.email })
     })
 
-    it('should respond 401 and send invalid password message', function () {
+    it('should respond 401 with error message when missing password', function () {
+      user.password = ''
+      return supertest(app).post('/api/auth/login')
+        .send(user)
+        .expect(401, {
+          message: 'Missing credentials'
+        })
+    })
+
+    it('should respond 401 with error message when missing email', function () {
+      user.email = ''
+      return supertest(app).post('/api/auth/login')
+        .send(user)
+        .expect(401, {
+          message: 'Missing credentials'
+        })
+    })
+
+    it('should respond 401 and with error message when password is incorrect', function () {
       user.password = '123455'
       return supertest(app).post('/api/auth/login')
         .send(user)
-        .expect(401, { message: 'Incorrect password.' })
+        .expect(401, {
+          password: 'Incorrect password.'
+        })
     })
 
-    it('should respond 401 and send invalid email account message', function () {
+    it('should respond 401 with error message when email does not exist', function () {
       user.email = 'no-one@gmail.com'
       return supertest(app).post('/api/auth/login')
         .send(user)
-        .expect(401, { message: 'Incorrect email account.' })
+        .expect(401, {
+          email: 'Email account doesn\'t exist'
+        })
     })
   })
 })
