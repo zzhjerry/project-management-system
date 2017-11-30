@@ -14,10 +14,6 @@ import { ProjectDetail, ProjectNew } from './Project'
 import Loading from './Loading'
 
 class App extends React.Component {
-  componentDidMount() {
-    this.props.dispatch(getUserAsync())
-  }
-
   render() {
     if (this.props.isFetching) {
       return <Loading/>
@@ -34,6 +30,10 @@ class App extends React.Component {
         </div>
       </Router>
     )
+  }
+
+  componentWillMount() {
+    this.props.dispatch(getUserAsync())
   }
 }
 

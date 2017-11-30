@@ -16,9 +16,9 @@ class Login extends React.Component {
     return (
       <div className="container" style={styles.container}>
         <h4>Welcome, Please Login</h4>
-        {this.props.loginError ? (<Alert color="danger">{this.props.loginError}</Alert>): (<p></p>)}
+        {this.props.loginError && <Alert color="danger">{this.props.loginError}</Alert>}
         <AuthForm model="loginForm" submitText="Login" onSubmit={this.handleSubmit}></AuthForm>
-        </div>
+      </div>
     )
   }
 
@@ -51,7 +51,7 @@ class Signup extends React.Component {
     return (
       <div className="container" style={styles.container}>
         <h4>Let's Sign Up</h4>
-        {signupError ? (<Alert color="danger">{signupError}</Alert>): (<p></p>)}
+        {signupError && <Alert color="danger">{signupError}</Alert>}
         <AuthForm
           model="signupForm" submitText="Sign Up"
           onSubmit={this.handleSubmit}>
@@ -82,14 +82,14 @@ class Signup extends React.Component {
 const AuthForm = ({ model, onSubmit, submitText='Submit' }) => (
   <Form model={model} style={styles.form} onSubmit={onSubmit}>
     <FormGroup>
-      <Label for="email">Email</Label>
+      <Label htmlFor="email">Email</Label>
       <Control
         model=".email" component={Input}
         placeholder="Please input your emails address" >
       </Control>
     </FormGroup>
     <FormGroup>
-      <Label for="password">Password</Label>
+      <Label htmlFor="password">Password</Label>
       <Control
         model=".password" type="password" component={Input}
         id="password" placeholder="Please input your password" >
