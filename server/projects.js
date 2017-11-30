@@ -13,6 +13,16 @@ router.get('/', function (req, res, next) {
 router.post('/', function (req, res, next) {
   const data = _.pick(req.body, ['title', 'description'])
   const project = new Project(data)
+  const error = project.validateSync()
+  const errors = _.get(error, 'errors')
+  if (errors) {
+    var errorWithOnlyMessage = _.mapValues(errors, function (error) {
+      return error.message
+    })
+    res.status(400)
+    return res.json(errorWithOnlyMessage)
+  }
+
   return project.save().then(function (project) {
     return res.status(201).json(project)
   }).catch(next)

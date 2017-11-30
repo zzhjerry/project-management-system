@@ -6,7 +6,7 @@ import { getProjectAsync } from './actions'
 import md from 'markdown-it'
 
 /* components */
-import { track, actions, Form, Control } from 'react-redux-form'
+import { track, actions, Form, Control, Errors } from 'react-redux-form'
 import {
   Button, Badge, Nav, NavItem, NavLink,
   TabContent, TabPane, ListGroup, ListGroupItem,
@@ -45,11 +45,13 @@ class ProjectNew extends React.Component {
 
     return (
       <div className="w-75 m-auto p-5">
-        <Form className="w-75" model="newProject" onSubmit={this.handleSubmit}>
+        <Form className="w-75" model="projectForm" onSubmit={this.handleSubmit}>
+          <Errors model=".message" className="text-danger"/>
           <Control.text model=".title" component={Input} className="my-3 w-50" placeholder="Title"></Control.text>
+          <Errors model=".title" className="text-danger"/>
           <MarkdownEditAndPreview
             model=".description"
-            text={this.props.project.description}>
+            text={this.props.projectForm.description}>
           </MarkdownEditAndPreview>
           <Button type="submit" className="my-3" color="success">Save</Button>
         </Form>
@@ -59,7 +61,7 @@ class ProjectNew extends React.Component {
 
   componentWillMount() {
     const { dispatch } = this.props
-    dispatch(actions.load('project', {
+    dispatch(actions.load('projectForm', {
       title: '',
       description: ''
     }))
@@ -72,13 +74,16 @@ class ProjectNew extends React.Component {
 
   handleSubmit(project) {
     const { dispatch, history } = this.props
+    dispatch(actions.resetValidity('projectForm'))
     const update$Q = superagent.post(`/api/projects`)
           .send({ ...project })
           .then(res => {
             history.push('/dashboard')
           })
-          .catch(err => err)
-    dispatch(actions.submit('newProject', update$Q))
+          .catch(err => {
+            throw err.response.body
+          })
+    dispatch(actions.submitFields('projectForm', update$Q))
   }
 }
 
@@ -388,7 +393,7 @@ const ConnectedProjectDetail = connect((state) => ({
 
 const ConnectedProjectNew = connect((state) => ({
   user: state.user,
-  project: state.newProject
+  projectForm: state.projectForm
 }))(withRouter(ProjectNew))
 
 export {

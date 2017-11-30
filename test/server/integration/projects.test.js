@@ -59,7 +59,7 @@ describe('Projects', function () {
       return mongoose.connection.db.dropDatabase()
     })
 
-    it('should respond 400 with validation error on duplicate title', function () {
+    it('should respond 400 with error message when title already exists', function () {
       return factory.create('project', { title: 'meow' }).then(function () {
         return mongoose.model('Project').ensureIndexes().then(function () {
           return supertest(app).post('/api/projects')
@@ -67,6 +67,13 @@ describe('Projects', function () {
             .expect(400, { message: 'Title already exists' })
         })
       })
+    })
+
+    it('should respond 400 when error message when title is missing', function () {
+      body.title = ''
+      return supertest(app).post('/api/projects')
+        .send(body)
+        .expect(400, { title: 'Title is required' })
     })
 
     it('should success with 201, set status to "new" and return created object', function () {
