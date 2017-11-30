@@ -202,6 +202,8 @@ various other authentication needs.
 
 ## Change log
 
+#### v0.3.2 - 20171130 (@jerry)
+* FIX: better error handling for errors from server
 #### v0.3.1 - 20171129 (@jerry)
 * FIX: test fixture and build documentation
 #### v0.3.0 - 20171129 (@jerry)
