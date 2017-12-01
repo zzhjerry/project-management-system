@@ -71,8 +71,6 @@ export default combineReducers({
   user,
   projects,
   ...createForms({
-    // Initial state will be provided upon receiving a project object
-    project: {},
     projectForm: {},
     loginForm: {},
     signupForm: {}

@@ -102,6 +102,6 @@ export const getProjectsAsync = () => (dispatch) => {
 
 export const getProjectAsync = (slug) => (dispatch) => {
   return superagent.get(`/api/projects/${slug}`)
-    .then(res => dispatch(actions.load('project', res.body)))
-    .catch(error => dispatch(actions.setErrors('project', error)))
+    .then(res => dispatch(actions.load('projectForm', res.body)))
+    .catch(error => dispatch(actions.setErrors('projectForm', error)))
 }

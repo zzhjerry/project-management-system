@@ -20,7 +20,7 @@ class ProjectDetail extends React.Component {
       return <Loading/>
     }
 
-    const { title, status, createdAt, description, slug, experts } = this.props.project
+    const { title, status, createdAt, description, slug, experts } = this.props.projectForm
     return (
       <div className="w-75 m-auto p-5">
         <ConnectedProjectHeader title={title} slug={slug}></ConnectedProjectHeader>
@@ -91,8 +91,10 @@ class ProjectHeader extends React.Component {
   render() {
     if (this.state.editable) {
       return (
-        <Form model="project.title" className="d-flex" onSubmit={this.handleSubmit}>
-          <Control.text component={Input} model="project.title" className="mr-auto w-50" placeholder="Title"></Control.text>
+        <Form model="projectForm.title" className="d-flex" onSubmit={this.handleSubmit}>
+          <Control.text component={Input} model="projectForm.title" className="mr-auto w-50"
+                        placeholder="Title">
+          </Control.text>
           <Button type="submit" className="mx-sm-1" color="success">Save</Button>
           <Button onClick={this.handleCancel} color="danger">Cancel</Button>
         </Form>
@@ -131,15 +133,15 @@ class ProjectHeader extends React.Component {
   handleSubmit(title) {
     const { slug, dispatch } = this.props
     const toggleEditable = this.toggleEditable
-    dispatch(actions.setPending('project.title', true))
+    dispatch(actions.setPending('projectForm.title', true))
     const update$Q = superagent.put(`/api/projects/${slug}`)
           .send({ title })
           .then(res => {
             toggleEditable()
-            dispatch(actions.setSubmited('project.title', true))
+            dispatch(actions.setSubmited('projectForm.title', true))
           })
           .catch(err => err)
-    dispatch(actions.submit('project.title', update$Q))
+    dispatch(actions.submit('projectForm.title', update$Q))
   }
 }
 
@@ -255,8 +257,8 @@ class Expert extends React.Component {
           .then(res => res)
           .catch(err => err)
     dispatch(actions.change(track(
-      'project.experts[].status', { 'expert._id': expert._id }), newStatus))
-    dispatch(actions.submit('project', update$Q))
+      'projectForm.experts[].status', { 'expert._id': expert._id }), newStatus))
+    dispatch(actions.submit('projectForm', update$Q))
 
   }
 }
@@ -273,15 +275,15 @@ class DescriptionEditAndPreview extends React.Component {
   handleSubmit(description) {
     const { slug, dispatch } = this.props
     const toggleEditable = this.props.toggleEditable
-    dispatch(actions.setPending('project.description', true))
+    dispatch(actions.setPending('projectForm.description', true))
     const update$Q = superagent.put(`/api/projects/${slug}`)
           .send({ description })
           .then(res => {
             toggleEditable()
-            dispatch(actions.setSubmited('project.description', true))
+            dispatch(actions.setSubmited('projectForm.description', true))
           })
           .catch(err => err)
-    dispatch(actions.submit('project.description', update$Q))
+    dispatch(actions.submit('projectForm.description', update$Q))
 
   }
 
@@ -291,9 +293,9 @@ class DescriptionEditAndPreview extends React.Component {
 
   render() {
     return (
-      <Form model="project.description" className="w-75" onSubmit={(description) => this.handleSubmit(description)}>
+      <Form model="projectForm.description" className="w-75" onSubmit={(description) => this.handleSubmit(description)}>
         <MarkdownEditAndPreview
-          model="project.description"
+          model="projectForm.description"
           text={this.props.text}>
         </MarkdownEditAndPreview>
         <div className="d-flex flex-row-reverse my-2">
@@ -388,7 +390,7 @@ const MarkdownDisplay = (props) => {
 
 const ConnectedProjectDetail = connect((state) => ({
   user: state.user,
-  project: state.project
+  projectForm: state.projectForm
 }))(ProjectDetail)
 
 const ConnectedProjectNew = connect((state) => ({
