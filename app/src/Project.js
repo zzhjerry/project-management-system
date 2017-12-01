@@ -91,13 +91,16 @@ class ProjectHeader extends React.Component {
   render() {
     if (this.state.editable) {
       return (
-        <Form model="projectForm.title" className="d-flex" onSubmit={this.handleSubmit}>
-          <Control.text component={Input} model="projectForm.title" className="mr-auto w-50"
-                        placeholder="Title">
-          </Control.text>
-          <Button type="submit" className="mx-sm-1" color="success">Save</Button>
-          <Button onClick={this.handleCancel} color="danger">Cancel</Button>
-        </Form>
+        <div>
+          <Errors model="projectForm.message" class="text-danger"/>
+          <Form model="projectForm.title" className="d-flex" onSubmit={this.handleSubmit}>
+            <Control.text component={Input} model="projectForm.title" className="mr-auto w-50"
+                          placeholder="Title">
+            </Control.text>
+            <Button type="submit" className="mx-sm-1" color="success">Save</Button>
+            <Button onClick={this.handleCancel} color="danger">Cancel</Button>
+          </Form>
+        </div>
       )
     }
 
@@ -140,8 +143,10 @@ class ProjectHeader extends React.Component {
             toggleEditable()
             dispatch(actions.setSubmited('projectForm.title', true))
           })
-          .catch(err => err)
-    dispatch(actions.submit('projectForm.title', update$Q))
+          .catch(err => {
+            throw err.response.body
+          })
+    dispatch(actions.submitFields('projectForm', update$Q))
   }
 }
 
